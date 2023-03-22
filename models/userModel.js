@@ -20,7 +20,8 @@ const userSchema = new mongoose.Schema(
     },
     empID: {
       type: String,
-      unique: true,
+      unique: false,
+      default: 3,
       //required: [true, `Enter Employee's ID !!`],
     },
     photo: String,
@@ -86,6 +87,13 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+/*userSchema.pre("save", function (next) {
+  if (!this.empID) {
+    this.empID = uuidv4();
+  }
+  next();
+});*/
 
 //?PRE-MIDDLEWARE - DOCUMENT MIDDLEWARE: runs before .save() and .create()
 
