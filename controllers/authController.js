@@ -7,13 +7,12 @@ const AppError = require("../utils/appError");
 const sendEmail = require("../utils/email");
 
 const signToken = (id, name, email) =>
-  jwt.sign({ id, name, email }, process.env.JWT_SECRET, {
+  jwt.sign({ name, email }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-
 const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id, user.name, user.email);
+  const token = signToken(user.name, user.email);
 
   // ...
 
@@ -44,7 +43,6 @@ exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
-    empID: req.body.empID,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
@@ -67,9 +65,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or password", 401));
   }
-
-  
-
+ 
   // 3)If everything is ok, send token to client
   createSendToken(user, 200, res);
   console.log("Logged In");
@@ -225,7 +221,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // 4) Log user in, send JWT
   createSendToken(user, 200, res);
 });
-
 
 exports.authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;

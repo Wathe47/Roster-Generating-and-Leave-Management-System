@@ -54,7 +54,7 @@ exports.getLeave = catchAsync(async (req, res, next) => {
   });
 });
 exports.getUserLeaves = catchAsync(async (req, res, next) => {
-  const leave = await LeaveRequest.find({ emp_id: req.emp_id });
+  const leave = await LeaveRequest.find({ email: req.email });
 
   if (!leave) {
     return next(new AppError('No leave found with that ID', 404));
