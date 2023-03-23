@@ -31,6 +31,19 @@ if (localStorage.jwtToken) {
   store.dispatch(setCurrentUser(decoded));
 }
 
+import setAuthToken from "./utils/setAuthToken";
+import jwt_decode from "jwt-decode";
+import { setCurrentUser } from "./actions/authActions";
+
+
+if (localStorage.jwtToken) {
+  const token = localStorage.jwtToken;
+  setAuthToken(token);
+  const decoded = jwt_decode(token);
+  store.dispatch(setCurrentUser(decoded));
+}
+
+
 let date = new Date();
 const hours = date.getHours();
 let mode;
