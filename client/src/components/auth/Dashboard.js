@@ -48,6 +48,9 @@ class Dashboard extends Component {
               <b>Hey there,</b> {auth.user.name.split(" ")[0]}
             </h4>
             <h4>
+              <b>Job Role : </b> {auth.user.jobTitle}
+            </h4>
+            <h4>
               <p>Current Time: {this.state.time}</p>
             </h4>
           </div>
