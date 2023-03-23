@@ -16,6 +16,20 @@ import ForgotPassword from "./components/auth/ForgotPassword";
 import Dashboard from "./components/auth/Dashboard";
 import Leave from "./components/auth/Leave";
 import NavbarDashboard from "./components/layout/NavbarDashboard";
+import Roster from "./components/auth/Roster";
+
+
+import setAuthToken from "./utils/setAuthToken";
+import jwt_decode from "jwt-decode";
+import { setCurrentUser } from "./actions/authActions";
+
+
+if (localStorage.jwtToken) {
+  const token = localStorage.jwtToken;
+  setAuthToken(token);
+  const decoded = jwt_decode(token);
+  store.dispatch(setCurrentUser(decoded));
+}
 
 let date = new Date();
 const hours = date.getHours();
@@ -119,6 +133,18 @@ class App extends Component {
                     exact
                     path="/leave"
                     render={(props) => <Leave mode={mode} {...props} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/roster"
+                    render={(props) => (
+                      <NavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/roster"
+                    render={(props) => <Roster mode={mode} {...props} />}
                   ></Route>
                 </React.Fragment>
               </Switch>

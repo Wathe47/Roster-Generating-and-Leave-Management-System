@@ -12,7 +12,7 @@ const RoosterSchema = new mongoose.Schema({
     },
   ],
   date: {
-    type: Date,
+    type: Date, 
     required: true,
   },
 });
