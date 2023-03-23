@@ -16,7 +16,11 @@ class NavbarDashboard extends Component {
                 DASHBOARD
               </Link>
             </li>
-
+<li>
+              <Link className="nav-link" to="/roster">
+                ROSTER
+              </Link>
+            </li>
             <li>
               <Link className="nav-link" to="/leave">
                 LEAVE
@@ -30,7 +34,7 @@ class NavbarDashboard extends Component {
             </li>
 
             <li>
-              <Link className="nav-link">ABOUT</Link>
+              <Link className="nav-link" to="/about">ABOUT</Link>
             </li>
           </ul>
         </nav>
