@@ -28,6 +28,12 @@ class Login extends Component {
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
+
+    // Check if authentication failed due to invalid credentials
+    if (nextProps.errors && nextProps.errors.invalidCredentials) {
+      // Set authentication to false
+      this.props.logoutUser();
+    }
   }
 
   onSubmit(e) {

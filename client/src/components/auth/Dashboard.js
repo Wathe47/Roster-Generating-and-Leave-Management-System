@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
@@ -10,6 +10,7 @@ class Dashboard extends Component {
     time: new Date().toLocaleTimeString(),
     profilePicture: null,
     filePreview: null,
+    redirect: false,
   };
 
   componentDidMount() {
@@ -24,7 +25,12 @@ class Dashboard extends Component {
 
   render() {
     const { auth } = this.props;
-    const { filePreview } = this.state;
+    const { filePreview, redirect } = this.state;
+
+    if (redirect) {
+      return <Redirect to="/login" />;
+    }
+
     return (
       <motion.div
         initial={{ opacity: 0, y: "1%" }}
@@ -45,7 +51,7 @@ class Dashboard extends Component {
         <div className="dashboard--greetings">
           <div className="col s12 center-align">
             <h4>
-              <b>Hey there,</b> {auth.user.name.split(" ")[0]}
+              <b>HI</b> {auth.user.name.split(" ")[0]}
             </h4>
             <h4>
               <b>Job Role : </b> {auth.user.jobTitle}
@@ -76,6 +82,7 @@ class Dashboard extends Component {
   handleLogout = (e) => {
     e.preventDefault();
     this.props.logoutUser();
+    this.setState({ redirect: true });
   };
 }
 
@@ -83,7 +90,7 @@ Dashboard.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
-
+ 
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
