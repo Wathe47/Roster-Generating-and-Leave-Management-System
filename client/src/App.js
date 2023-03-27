@@ -22,6 +22,7 @@ import Roster from "./components/auth/Roster";
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { setCurrentUser } from "./actions/authActions";
+import RosterCreate from "./components/auth/RosterCreate"
 
 
 if (localStorage.jwtToken) {
@@ -30,8 +31,6 @@ if (localStorage.jwtToken) {
   const decoded = jwt_decode(token);
   store.dispatch(setCurrentUser(decoded));
 }
-
-
 
 let date = new Date();
 const hours = date.getHours();
@@ -147,6 +146,18 @@ class App extends Component {
                     exact
                     path="/roster"
                     render={(props) => <Roster mode={mode} {...props} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/rosterCreate"
+                    render={(props) => (
+                      <NavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/rosterCreate"
+                    render={(props) => <RosterCreate mode={mode} {...props} />}
                   ></Route>
                 </React.Fragment>
               </Switch>
