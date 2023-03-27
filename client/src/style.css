@@ -671,6 +671,26 @@ h4 {
 
 }
 
+.roster--duration {
+  position: absolute;
+  right: 5%;
+  top:110px;
+}
+.roster--button {
+  margin-top: 10px;
+  margin-left: 25px;
+}
+
+.roster--devider {
+  position: absolute;
+  width: 1.5px;
+  height: 46%;
+  background-color: rgba(117, 117, 117, 0.27);
+  top: 53%;
+  left: 255px;
+  border-radius: 10px;
+}
+
 
 
 

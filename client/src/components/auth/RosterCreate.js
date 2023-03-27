@@ -67,7 +67,7 @@ class About extends Component {
       >
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom style ={{marginTop:'35px',fontSize:'27px',marginLeft:'20px',fontWeight:'700',color:'#888888'}}>
-              ADMIN_ROSTER
+              CREATE NEW ROSTER
             </Typography>
             {/* Add form fields here */}
           </Grid>
@@ -85,8 +85,21 @@ class About extends Component {
               Edit 
             </Button>
             </div>
-            <div className='roster--duration'>
-            <TextField 
+
+
+
+          </Grid>
+        </Grid>
+      </Paper>
+      
+      <Paper style={{ marginLeft: '20px', marginTop: '45px', marginRight: '20px',marginBottom:'45px' }}>
+          <TableContainer component={Paper} style={{background:'#F6FFF3'}}>
+            <Table style={{ tableLayout: 'fixed' }}>
+              <TableHead>
+                <TableRow>
+                  <TableCell colSpan={6}>
+                  <div style={{textAlign:'center'}} >
+                  <TextField 
               id="start-date"
               label="Select Start Date"
               type="date"
@@ -108,23 +121,6 @@ class About extends Component {
               
             />
             </div>
-
-
-
-
-          </Grid>
-        </Grid>
-      </Paper>
-      
-      <Paper style={{ marginLeft: '20px', marginTop: '45px', marginRight: '20px',marginBottom:'45px' }}>
-          <TableContainer component={Paper} style={{background:'#F6FFF3'}}>
-            <Table style={{ tableLayout: 'fixed' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell colSpan={6}>
-                  <div style={{textAlign:'center'}} >
-                  <TextField label=" Start Date-End Date " size="small"/>
-                  </div>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -174,9 +170,8 @@ class About extends Component {
             <TableRow key={index}>
               <TableCell style={{ width: '25%' ,border:'0px' }}></TableCell>
               {[...Array(5)].map((_, dayIndex) => (
-                <TableCell key={dayIndex} style={{border:'5px'}}>            
-                <TextField sx={{width: '150px'}} size="small"/>
-            </TableCell>
+                <TableCell key={dayIndex} style={{border:'5px'}}><Button variant="contained" color="inherit" onClick={this.handleEditRoster} >
+            </Button></TableCell>
               ))}
             </TableRow>
           ))}

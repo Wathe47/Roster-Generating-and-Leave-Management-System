@@ -1,38 +1,31 @@
-import React from "react";
-import {
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 class Leave extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: "",
-      startDate: "",
-      endDate: "",
-      duration: "",
-      priority: "",
-      comments: "",
+      name: '',
+      startDate: '',
+      endDate: '',
+      duration: '',
+      priority: '',
+      comments: '',
     };
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Form submitted:", this.state);
+    console.log('Form submitted:', this.state);
   };
 
   handleInputChange = (event) => {
     const target = event.target;
     const name = target.name;
-    const value = target.type === "checkbox" ? target.checked : target.value;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
 
     this.setState({
       [name]: value,
@@ -42,30 +35,23 @@ class Leave extends React.Component {
   render() {
     return (
       <motion.div
-        initial={{ opacity: 0, y: "1%" }}
-        animate={{ opacity: 1, y: "0%" }}
-        transition={{ duration: 0.75, ease: "easeOut" }}
+        initial={{ opacity: 0, y: '1%' }}
+        animate={{ opacity: 1, y: '0%' }}
+        transition={{ duration: 0.75, ease: 'easeOut' }}
         className={this.props.mode}
       >
-        <h1
-          style={{
-            marginLeft: "20%",
-            fontSize: "30px",
-            fontfamily: "Roboto",
-            color: "rgb(89, 88, 88)",
-          }}
-        >
-          LEAVE REQUEST FORM
-        </h1>
+                <h1 style={{marginLeft:'20%',fontSize:'30px',fontfamily: 'Roboto',  color:'rgb(89, 88, 88)'
+}}>LEAVE REQUEST FORM</h1>
 
         <div className="leave">
+
           <form onSubmit={this.handleSubmit}>
             <TextField
               label="Name"
               variant="outlined"
               name="name"
               value={this.state.name}
-              onChange={this.handleInputChange} 
+              onChange={this.handleInputChange}
               fullWidth
               margin="normal"
             />
@@ -130,46 +116,45 @@ class Leave extends React.Component {
               fullWidth
               margin="normal"
             />
+           
           </form>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "1rem",
-            marginRight: "20%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            style={{ marginRight: "10px" }}
-          >
-            Request
-          </Button>
-          <Link to="/dashboard" className="leaveclosebutton">
-            <Button variant="outlined">Close</Button>
-          </Link>
-        </div>
 
-        <div className="leave">
-          <form>
-            <TextField
-              label="Pending Requests"
-              variant="outlined"
-              value={10}
-              margin="normal"
-              style={{ marginRight: "1rem" }}
-            />
-            <TextField
-              label="Approved Requests"
-              variant="outlined"
-              value={5}
-              margin="normal"
-            />
-          </form>
+          
         </div>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem', marginRight: '20%' }}>
+        <Button type="submit" variant="contained" color="success" style={{marginRight:'10px'}}>
+              Request
+            </Button>
+            <Link to="/dashboard" className='leaveclosebutton'>
+            <Button variant="outlined" >
+              Close
+            </Button>
+            
+          </Link>
+          </div>
+
+          <div className="leave">
+          <form>
+          <TextField
+            label="Pending Requests"
+            variant="outlined"
+            value={10}
+            margin="normal"
+            style={{ marginRight: '1rem' }}
+            />
+            <TextField
+             label="Approved Requests"
+             variant="outlined"
+             value={5}
+             margin="normal"
+           />
+           </form>
+           </div>
+           
+           
+        
+          
+          
       </motion.div>
     );
   }
