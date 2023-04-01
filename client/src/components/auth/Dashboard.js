@@ -4,6 +4,7 @@ import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
+import "./Dashboard.css";
 
 class Dashboard extends Component {
   state = {
@@ -38,43 +39,43 @@ class Dashboard extends Component {
         transition={{ duration: 0.75, ease: "easeOut" }}
         className={this.props.mode}
       >
-        <div className="row">
-          <div className="col s12">
-            <h1>Dashboard</h1>
+        <div className="dashboard__header">
+          <h1 className="dashboard__title">Dashboard</h1>
+          <button
+            className="dashboard__logoutButton"
+            onClick={this.handleLogout}
+          >
+            Logout
+          </button>
+        </div>
+        <div className="dashboard__content">
+          <div className="dashboard__profileSection">
             <img
               src={filePreview || auth.user.avatar}
               alt="Profile"
-              className="dashboard--profilePhoto"
+              className="dashboard__profilePhoto"
             />
+            <div className="dashboard__profileInfo">
+              <h2 className="dashboard__greeting">
+                Hi, {auth.user.name.split(" ")[0]}!
+              </h2>
+              <p className="dashboard__jobTitle">
+                <b>Job Title:</b> {auth.user.jobTitle}
+              </p>
+              <p className="dashboard__currentTime">
+                <b>Current Time:</b> {this.state.time}
+              </p>
+            </div>
+          </div>
+          <div className="dashboard__actionSection">
+            <Link to="/leave">
+              <button className="dashboard__actionButton">Request Leave</button>
+            </Link>
+            <Link to="/roster">
+              <button className="dashboard__actionButton">View Roster</button>
+            </Link>
           </div>
         </div>
-        <div className="dashboard--greetings">
-          <div className="col s12 center-align">
-            <h4>
-              <b>HI</b> {auth.user.name.split(" ")[0]}
-            </h4>
-            <h4>
-              <b>Job Role : </b> {auth.user.jobTitle}
-            </h4>
-            <h4>
-              <p>Current Time: {this.state.time}</p>
-            </h4>
-          </div>
-        </div>
-        <Link to="/leave">
-          <button className="dashboard--leaveButton">Request Leave</button>
-        </Link>
-        <button
-          style={{
-            width: "150px",
-            borderRadius: "3px",
-            letterSpacing: "1.5px",
-            marginTop: "1rem",
-          }}
-          onClick={this.handleLogout}
-        >
-          Logout
-        </button>
       </motion.div>
     );
   }
@@ -90,7 +91,7 @@ Dashboard.propTypes = {
   logoutUser: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired,
 };
- 
+
 const mapStateToProps = (state) => ({
   auth: state.auth,
 });
