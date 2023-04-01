@@ -17,13 +17,14 @@ import Dashboard from "./components/auth/Dashboard";
 import Leave from "./components/auth/Leave";
 import NavbarDashboard from "./components/layout/NavbarDashboard";
 import Roster from "./components/auth/Roster";
+import Rostercheckin from "./components/auth/Rostercheckin"
 
 
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
 import { setCurrentUser } from "./actions/authActions";
 import RosterCreate from "./components/auth/RosterCreate"
-
+import Emproster from "./components/auth/EMP_Roster"
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -158,6 +159,30 @@ class App extends Component {
                     exact
                     path="/rosterCreate"
                     render={(props) => <RosterCreate mode={mode} {...props} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/empRoster"
+                    render={(props) => (
+                      <NavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/empRoster"
+                    render={(props) => <Emproster mode={mode} {...props} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/rostercheckin"
+                    render={(props) => (
+                      <NavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/rostercheckin"
+                    render={(props) => <Rostercheckin mode={mode} {...props} />}
                   ></Route>
                 </React.Fragment>
               </Switch>

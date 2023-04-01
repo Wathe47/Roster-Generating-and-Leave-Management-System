@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Paper, Button, Grid, Typography, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Menu, MenuItem} from '@mui/material';
+import { Paper, Button, Grid, Typography, TextField, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Menu, MenuItem, Select, InputLabel, FormControl} from '@mui/material';
 import { motion } from 'framer-motion';
 //import { Link } from 'react-router-dom';
 
@@ -12,8 +12,11 @@ class About extends Component {
       endDate: '',
       anchorEl: null,
       jobPosition: '',
+      selectedName: [],
+      names: ["John", "Mary", "Bob"]
       
     };
+
     this.handleCreateNewRoster = this.handleCreateNewRoster.bind(this);
     this.handleEditRoster = this.handleEditRoster.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -54,10 +57,18 @@ class About extends Component {
     this.handleJobPositionClose();
   }
 
+  handleNameChange = (event) => {
+    const { names } = this.state;
+    const selectedName = event.target.value;
+    const newSelectedNames = names.filter(name => name !== selectedName);
+    this.setState({ selectedName: [...this.state.selectedName, selectedName], names: newSelectedNames });
+  };
+
   
 
   render() {
     const { anchorEl } = this.state;
+    const { selectedName, names } = this.state;
     return (
         <motion.div
         initial={{ opacity: 0, y: "1%" }}
@@ -185,7 +196,60 @@ class About extends Component {
                   </Table>
                   </TableContainer>
                   </Paper>
-                  <div className='roster--devider'></div>
+                  <div className='admin-roster--devider'></div>
+
+                  <Paper style={{ marginLeft: '20px', marginTop: '45px', marginRight: '20px',marginBottom:'45px',paddingLeft:'20px',paddingBottom:'8px',background:'#F6FFF3' }}>
+                  <div>
+        {selectedName.length > 0 && (
+          <div>
+            <ul>
+              {selectedName.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <p>Work from home staff:</p>
+        <FormControl>
+          <InputLabel id="name-label">Name</InputLabel>
+          <Select
+            labelId="name-label"
+            id="name"
+            value={selectedName}
+            onChange={this.handleNameChange}
+          >
+            {names.map((name) => (
+              <MenuItem key={name} value={name}>{name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+      <div>
+        {selectedName.length > 0 && (
+          <div>
+            <ul>
+              {selectedName.map((name) => (
+                <li key={name}>{name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+        <p>Work from home staff:</p>
+        <FormControl>
+          <InputLabel id="name-label">Name</InputLabel>
+          <Select
+            labelId="name-label"
+            id="name"
+            value={selectedName}
+            onChange={this.handleNameChange}
+          >
+            {names.map((name) => (
+              <MenuItem key={name} value={name}>{name}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </div>
+                  </Paper>
       </motion.div>
     );
   }

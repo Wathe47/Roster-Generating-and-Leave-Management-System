@@ -13,11 +13,13 @@ import {
   TableRow,
   Menu,
   MenuItem,
+  Radio,
+  FormControlLabel,
 } from "@mui/material";
 import { motion } from "framer-motion";
 //import { Link } from 'react-router-dom';
 
-class RosterCreate extends Component {
+class EMP_Roster extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,7 +27,13 @@ class RosterCreate extends Component {
       endDate: "",
       anchorEl: null,
       jobPosition: "",
+      onlyMeChecked: false,
+      jobPositionChecked: false,
+      
+    
+      
     };
+
     this.handleCreateNewRoster = this.handleCreateNewRoster.bind(this);
     this.handleEditRoster = this.handleEditRoster.bind(this);
     this.handleStartDateChange = this.handleStartDateChange.bind(this);
@@ -64,8 +72,47 @@ class RosterCreate extends Component {
     this.handleJobPositionClose();
   }
 
+  handleOnlyMeChange = () => {
+    if (!this.state.onlyMeChecked) {
+      // If it's currently unchecked, set it to checked
+      this.setState({
+        onlyMeChecked: true,
+        jobPositionChecked: false, // Uncheck the other radio button
+      });
+    } else {
+      // If it's currently checked, uncheck it
+      this.setState({
+        onlyMeChecked: false,
+      });
+    }
+  };
+
+  handleJobPositionChange = () => {
+    if (!this.state.jobPositionChecked) {
+      // If it's currently unchecked, set it to checked
+      this.setState({
+        jobPositionChecked: true,
+        onlyMeChecked: false, // Uncheck the other radio button
+      });
+    } else {
+      // If it's currently checked, uncheck it
+      this.setState({
+        jobPositionChecked: false,
+      });
+    }
+  };
+
+  
+  handleNameChange = (event) => {
+    const { names } = this.state;
+    const selectedName = event.target.value;
+    const newSelectedNames = names.filter(name => name !== selectedName);
+    this.setState({ selectedName: [...this.state.selectedName, selectedName], names: newSelectedNames });
+  };
+
   render() {
     const { anchorEl } = this.state;
+    
     return (
       <motion.div
         initial={{ opacity: 0, y: "1%" }}
@@ -83,7 +130,7 @@ class RosterCreate extends Component {
               fontWeight: "700",
               color: "#888888",
             }}>
-            CREATE NEW ROSTER
+            EMP_ROSTER
           </Typography>
           {/* Add form fields here */}
         </Grid>
@@ -98,22 +145,52 @@ class RosterCreate extends Component {
           }}>
           <Grid container spacing={3}>
             <Grid item xs={12} className="roster--grid">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.handleCreateNewRoster}
-                style={{ marginLeft: "25px", marginTop: "15px" }}>
-                Create
-              </Button>
+              <div style={{paddingLeft:'20px'}}>
+                <FormControlLabel
+                  label="Filter By: Only Me"
+                  labelPlacement="end"
+                  control={
+                    <Radio
+                      checked={this.state.onlyMeChecked}
+                      onChange={this.handleOnlyMeChange}
+                    />
+                  }
+                />
+                </div>
+                <div style={{paddingLeft:'20px'}}>
+                <FormControlLabel
+                  label="Sort By: Job Position"
+                  labelPlacement="end"
+                  control={
+                    <Radio
+                      checked={this.state.jobPositionChecked}
+                      onChange={this.handleJobPositionChange}
+                    />
+                  }
+                />
+              </div>
 
-              <div className="roster--button">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.handleEditRoster}
-                  className="roster--button">
-                  Edit
-                </Button>
+              <div className="roster--duration">
+                <TextField
+                  id="start-date"
+                  label="Select Start Date"
+                  type="date"
+                  value={this.state.startDate}
+                  onChange={this.handleStartDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+                <TextField
+                  id="end-date"
+                  label="Select End Date"
+                  type="date"
+                  value={this.state.endDate}
+                  onChange={this.handleEndDateChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
               </div>
             </Grid>
           </Grid>
@@ -132,26 +209,7 @@ class RosterCreate extends Component {
                 <TableRow>
                   <TableCell colSpan={6}>
                     <div style={{ textAlign: "center" }}>
-                      <TextField
-                        id="start-date"
-                        label="Select Start Date"
-                        type="date"
-                        value={this.state.startDate}
-                        onChange={this.handleStartDateChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                      <TextField
-                        id="end-date"
-                        label="Select End Date"
-                        type="date"
-                        value={this.state.endDate}
-                        onChange={this.handleEndDateChange}
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
+                      <TextField label=" Start Date-End Date " size="small" />
                     </div>
                   </TableCell>
                 </TableRow>
@@ -241,10 +299,7 @@ class RosterCreate extends Component {
                       style={{ width: "25%", border: "0px" }}></TableCell>
                     {[...Array(5)].map((_, dayIndex) => (
                       <TableCell key={dayIndex} style={{ border: "5px" }}>
-                        <Button
-                          variant="contained"
-                          color="inherit"
-                          onClick={this.handleEditRoster}></Button>
+                        <TextField sx={{ width: "150px" }} size="small" defaultValue="Name"/>
                       </TableCell>
                     ))}
                   </TableRow>
@@ -253,10 +308,33 @@ class RosterCreate extends Component {
             </Table>
           </TableContainer>
         </Paper>
-        <div className="roster-create--devider"></div>
+        <div className="emp-roster--devider"></div>
+
+        <Paper
+          style={{
+            marginLeft: "20px",
+            marginTop: "45px",
+            marginRight: "20px",
+            marginBottom: "45px",
+            background: "#F6FFF3",
+            padding:"10px 10px 20px 20px"
+
+          }}>
+           <div>
+           <p>WORK FROM HOME STAFF:</p>
+          <TextField id="outlined-basic" variant="outlined" size="small"/>
+      </div>
+      <div>
+      <p>DAY OFF STAFF:</p>
+      <TextField id="outlined-basic"  variant="outlined" size="small"/>
+      </div>
+
+        
+        </Paper>
+        
       </motion.div>
     );
   }
 }
 
-export default RosterCreate;
+export default EMP_Roster;

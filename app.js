@@ -17,6 +17,7 @@ const leaveRoutes = require('./routes/leaveRoutes');
 const userRoutes = require('./routes/userRoutes');
 // import userRoutes
 const departmentRoutes = require('./routes/departmentRoutes');
+const roster = require('./models/roster');
 
 const app = express();
 // create an express app
@@ -89,6 +90,8 @@ app.use((req, res, next) => {
 app.use('/api/leaves', leaveRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/department', departmentRoutes);
+app.use('/api/roster', roster);
+
 //Handling unhandled routes
 app.all('*', (req, res, next) => {
   // const err = new Error(`Can't find ${req.originalUrl} on this server!`);
