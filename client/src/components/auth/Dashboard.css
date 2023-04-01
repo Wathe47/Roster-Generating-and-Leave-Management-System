@@ -1,0 +1,104 @@
+.dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard__title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.dashboard__logoutButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #f44336;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.dashboard__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dashboard__profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard__profilePhoto {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}
+
+.dashboard__profileInfo {
+  text-align: center;
+}
+
+.dashboard__greeting {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__jobTitle {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.dashboard__currentTime {
+  font-size: 1.2rem;
+}
+
+.dashboard__actionSection {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 350px;
+}
+
+.dashboard__actionButton {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  background-color: #2196f3;
+  color: #fff;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 1rem;
+}
+
+.dashboard__actionButton:last-of-type {
+  margin-right: 0;
+}
+
+@media (max-width: 600px) {
+  .dashboard__content {
+    padding: 0 1rem;
+  }
+
+  .dashboard__profileSection {
+    margin-bottom: 1rem;
+  }
+
+  .dashboard__actionSection {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard__actionButton {
+    margin: 0.5rem 0;
+  }
+}
