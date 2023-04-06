@@ -6,6 +6,7 @@ import {
   updateRosterItem,
   deleteRosterItem,
 } from "../../actions/rosterActions";
+import "./RosterCheckin.css";
 
 class Roster extends Component {
   state = {
@@ -70,8 +71,11 @@ class Roster extends Component {
     const { roster } = this.props;
 
     return (
-      <div>
+      <div className="checkin">
+        <br />
+        <br />
         <h1>Roster</h1>
+        <br />
         <form
           onSubmit={
             this.state.editingId
@@ -100,55 +104,53 @@ class Roster extends Component {
             <input
               type="checkbox"
               checked={this.state.checkedIn}
-              onChange={(e) =>
-                this.setState({ checkedIn: e.target.checked })
-              }
+              onChange={(e) => this.setState({ checkedIn: e.target.checked })}
             />
           </label>
           <button type="submit">
             {this.state.editingId ? "Update" : "Add"}
           </button>
         </form>
-        <ul>
-          {roster.map((item) => (
-            <li key={item._id}>
-              {item.name} - {item.email} -{" "}
-              {item.checkedIn ? "Checked In" : "Not Checked In"}
-              <button
-                onClick={() =>
-                  this.handleCheckInOut(item._id, item.checkedIn)
-                }
+
+        <ul className="checkin--ul">
+          {roster?.map((item) => (
+            <li className="checkin--li" key={item._id}>
+              {item.name} {"  "} | {item.email} |{" "}
+              {item.checkedIn
+                ? `Checked In at ${item.checkInTime}`
+                : "Not Checked In"}
+              {/* <button className="check-in"
+                onClick={() => this.handleCheckInOut(item._id, item.checkedIn)}
               >
                 {item.checkedIn ? "Check Out" : "Check In"}
               </button>
-              <button onClick={() => this.handleEditRosterItem(item)}>
+              <button className="edit" onClick={() => this.handleEditRosterItem(item)}>
                 Edit
               </button>
-              <button onClick={() => this.handleDeleteRosterItem(item._id)}>
+              <button className="delete" onClick={() => this.handleDeleteRosterItem(item._id)}>
                 Delete
-              </button>
+              </button> */}
             </li>
           ))}
         </ul>
-    {this.props.loading && <div>Loading...</div>}
-    {this.props.error && <div>Error: {this.props.error}</div>}
-  </div>
-); 
-}
+        <div className="checkin--devider"></div>
+        {this.props.loading && <div>Loading...</div>}
+        {this.props.error && <div>Error: {this.props.error}</div>}
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => ({
-roster: state.roster.roster,
-loading: state.roster.loading,
-error: state.roster.error,
+  auth: state.auth,
+  roster: state.roster.roster,
+  loading: state.roster.loading,
+  error: state.roster.error,
 });
 
 export default connect(mapStateToProps, {
-fetchRoster,
-addRosterItem,
-updateRosterItem,
-deleteRosterItem,
+  fetchRoster,
+  addRosterItem,
+  updateRosterItem,
+  deleteRosterItem,
 })(Roster);
-
-
-

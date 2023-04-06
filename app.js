@@ -1,30 +1,30 @@
-const path = require('path');
-const express = require('express');
-const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-const helmet = require('helmet');
-const mongoSanitize = require('express-mongo-sanitize');
-const xss = require('xss-clean');
-const hpp = require('hpp');
-const cors = require('cors');
-const corsOptions = require('./config/corsOptions');
+const path = require("path");
+const express = require("express");
+const morgan = require("morgan");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const hpp = require("hpp");
+const cors = require("cors");
+const corsOptions = require("./config/corsOptions");
 
-const AppError = require('./utils/appError');
-const globalErrorHandler = require('./controllers/errorController');
+const AppError = require("./utils/appError");
+const globalErrorHandler = require("./controllers/errorController");
 
-const leaveRoutes = require('./routes/leaveRoutes');
+const leaveRoutes = require("./routes/leaveRoutes");
 // import leaveRoutes
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require("./routes/userRoutes");
 // import userRoutes
-const departmentRoutes = require('./routes/departmentRoutes');
-const roster = require('./models/roster');
+const departmentRoutes = require("./routes/departmentRoutes");
+const rosterRoutes = require("./routes/roster");
 
 const app = express();
 // create an express app
 
-app.set('view engine', 'pug');
+app.set("view engine", "pug");
 // set the view engine to pug
-app.set('views', path.join(__dirname, 'views'));
+app.set("views", path.join(__dirname, "views"));
 
 // 1) GLOBAL MIDDLEWARES
 //! Security Measurement
@@ -32,8 +32,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(helmet());
 
 //? Development logging
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
 }
 
 //? Cors
@@ -45,21 +45,21 @@ const limiter = rateLimit({
   max: 100, //no of requests
   windowMs: 60 * 60 * 1000, //window miliseconds
   // 100 requests per hour
-  message: 'Too many requests from this IP, please try again in an hour!',
+  message: "Too many requests from this IP, please try again in an hour!",
 });
-app.use('/api', limiter);
+app.use("/api", limiter);
 
 //! Security Measurement
 //?Limiting invalid login attempts
 const loginLimiter = rateLimit({
   max: 100, //no of requests
   windowMs: 60 * 60 * 1000, //1 hour
-  message: 'Too many login attempts, please try again in an hour!',
+  message: "Too many login attempts, please try again in an hour!",
 });
-app.post('/api/users/login', loginLimiter);
+app.post("/api/users/login", loginLimiter);
 
 //? Body parser, reading data from body into req.body
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: "10kb" }));
 //! Security Measurement
 //body limit is to prevent DOS attacks (Denial of Service)
 
@@ -87,13 +87,13 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
-app.use('/api/leaves', leaveRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/department', departmentRoutes);
-app.use('/api/roster', roster);
+app.use("/api/leaves", leaveRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/department", departmentRoutes);
+app.use("/api/roster", rosterRoutes);
 
 //Handling unhandled routes
-app.all('*', (req, res, next) => {
+app.all("*", (req, res, next) => {
   // const err = new Error(`Can't find ${req.originalUrl} on this server!`);
   // err.status = 'fail';
   // err.statusCode = 404;

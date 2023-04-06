@@ -4,6 +4,8 @@ import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
+import { updateProfilePicture } from "../../actions/profileActions";
+
 import "./Dashboard.css";
 
 class Dashboard extends Component {
@@ -19,6 +21,20 @@ class Dashboard extends Component {
       this.setState({ time: new Date().toLocaleTimeString() });
     }, 1000);
   }
+  handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    const filePreview = URL.createObjectURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+    this.setState({ filePreview, formData });
+  };
+
+  handleProfilePictureSubmit = (e) => {
+    e.preventDefault();
+    const { formData } = this.state;
+    this.props.updateProfilePicture(formData);
+    this.setState({ filePreview: null, formData: null });
+  };
 
   componentWillUnmount() {
     clearInterval(this.intervalID);
@@ -55,16 +71,23 @@ class Dashboard extends Component {
               alt="Profile"
               className="dashboard__profilePhoto"
             />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={this.handleProfilePictureChange}
+            />
+            <button onClick={this.handleProfilePictureSubmit}>
+              Update Profile Picture
+            </button>
+
             <div className="dashboard__profileInfo">
               <h2 className="dashboard__greeting">
-                Hi, {auth.user.name.split(" ")[0]}!
+                Hi again, {auth.user.name.split(" ")[0]}!
               </h2>
               <p className="dashboard__jobTitle">
                 <b>Job Title:</b> {auth.user.jobTitle}
               </p>
-              <p className="dashboard__currentTime">
-                <b>Current Time:</b> {this.state.time}
-              </p>
+              <p className="dashboard__currentTime">{this.state.time}</p>
             </div>
           </div>
           <div className="dashboard__actionSection">
@@ -96,4 +119,6 @@ const mapStateToProps = (state) => ({
   auth: state.auth,
 });
 
-export default connect(mapStateToProps, { logoutUser })(Dashboard);
+export default connect(mapStateToProps, { logoutUser, updateProfilePicture })(
+  Dashboard
+);

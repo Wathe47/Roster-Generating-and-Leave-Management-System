@@ -4,7 +4,7 @@ import { GET_ERRORS, SET_PROFILE_PICTURE } from "./types";
 // Set profile picture
 export const updateProfilePicture = (data) => (dispatch) => {
   axios
-    .post("/api/profile/picture", data)
+    .post("/api/users/picture", data)
     .then((res) =>
       dispatch({
         type: SET_PROFILE_PICTURE,

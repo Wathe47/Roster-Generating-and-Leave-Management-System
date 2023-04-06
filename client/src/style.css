@@ -573,6 +573,7 @@ h4 {
 
 .register--inputfields {
   margin-top: 30px;
+  width: 100%;
 }
 
 .register--form--full {
@@ -587,6 +588,7 @@ h4 {
   position: relative;
   font-size: 20px;
   margin-left: 800px;
+  width: 50%;
 }
 
 .register--image {
@@ -596,7 +598,6 @@ h4 {
   top: 50px;
   left: 100px;
 }
-
 
 .dashboard--leaveButton {
   color: black;
@@ -611,49 +612,35 @@ h4 {
 }
 
 .about-p {
-
   font-size: 17px;
   margin-top: 0px;
   margin-bottom: 10px;
   color: rgb(111, 111, 111);
   margin-left: 75px;
   max-width: 75%;
-  font-family: 'Montserrat', sans-serif;
-
-
+  font-family: "Montserrat", sans-serif;
 }
 
 .about-topic {
   margin-left: 75px;
-  color:rgb(89, 88, 88);
+  color: rgb(89, 88, 88);
   font-size: 30px;
   margin-top: 10%;
-  
-
-
 }
-
 
 .team-img {
   flex: 1;
-
-  
 }
 
 .team-img1 {
   width: 40%;
   height: auto;
-  display: block; 
-  margin: 0 auto; 
-
-
+  display: block;
+  margin: 0 auto;
 }
 
 .success-img {
   flex: 1;
-
-  
-
 }
 
 .leave {
@@ -664,17 +651,15 @@ h4 {
   border-radius: 30px;
   margin-top: 20px;
   text-decoration: none;
-
 }
 .leaveclosebutton {
   text-decoration: none;
-
 }
 
 .roster--duration {
   position: absolute;
   right: 5%;
-  top:110px;
+  top: 110px;
 }
 .roster--button {
   margin-top: 10px;
@@ -699,10 +684,9 @@ h4 {
   top: 40%;
   left: 255px;
   border-radius: 10px;
-
 }
 
-.admin-roster--devider{
+.admin-roster--devider {
   position: absolute;
   width: 1.5px;
   height: 34%;
@@ -710,11 +694,7 @@ h4 {
   top: 40%;
   left: 255px;
   border-radius: 10px;
-
 }
-
-
-
 
 @keyframes backMove {
   0% {

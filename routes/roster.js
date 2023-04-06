@@ -11,7 +11,7 @@ router.route("/").get(getRoster);
 
 router.route("/:id").get(getRosterById);
 
-router.route("/add").post(addRosterItem);
+router.route("/").post(addRosterItem);
 
 router.route("/update/:id").post(updateRosterItem);
 
