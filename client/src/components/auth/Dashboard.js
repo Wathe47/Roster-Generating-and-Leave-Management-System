@@ -5,6 +5,11 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logoutUser } from "../../actions/authActions";
 import { updateProfilePicture } from "../../actions/profileActions";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardMedia from "@mui/material/CardMedia";
+import Typography from "@mui/material/Typography";
+import { CardActionArea } from "@mui/material";
 
 import "./Dashboard.css";
 
@@ -76,13 +81,11 @@ class Dashboard extends Component {
               accept="image/*"
               onChange={this.handleProfilePictureChange}
             />
-            <button onClick={this.handleProfilePictureSubmit}>
-              Update Profile Picture
-            </button>
+            <button onClick={this.handleProfilePictureSubmit}>Update</button>
 
             <div className="dashboard__profileInfo">
               <h2 className="dashboard__greeting">
-                Hi again, {auth.user.name.split(" ")[0]}!
+                Hi, {auth.user.name.split(" ")[0]}!
               </h2>
               <p className="dashboard__jobTitle">
                 <b>Job Title:</b> {auth.user.jobTitle}
@@ -91,11 +94,73 @@ class Dashboard extends Component {
             </div>
           </div>
           <div className="dashboard__actionSection">
-            <Link to="/leave">
+            {/* <button className="dashboard__actionButton">Check In</button> */}
+            <Link to="/rosterCheckin" style={{ textDecoration: "none" }}>
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image="checkin.jpeg"
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h7" component="div">
+                      CHECKIN
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Let's do some good work!
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+
+            {/* <Link to="/leave">
               <button className="dashboard__actionButton">Request Leave</button>
             </Link>
             <Link to="/roster">
               <button className="dashboard__actionButton">View Roster</button>
+            </Link> */}
+            <Link to="/leave" style={{ textDecoration: "none" }}>
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image="leave.png"
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h7" component="div">
+                      LEAVE
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Request Leave.
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Link>
+            <Link to="/empRoster" style={{ textDecoration: "none" }}>
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image="roster.png"
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h7" component="div">
+                      ROSTER
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Your Job Roster.
+                    </Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
             </Link>
           </div>
         </div>

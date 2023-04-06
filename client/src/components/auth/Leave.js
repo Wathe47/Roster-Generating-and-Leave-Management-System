@@ -47,6 +47,7 @@ class Leave extends React.Component {
         transition={{ duration: 0.75, ease: "easeOut" }}
         className={this.props.mode}
       >
+        <br />
         <h1
           style={{
             marginLeft: "20%",

@@ -23,7 +23,7 @@ class NavbarDashboard extends Component {
           </Link>
         </li>
         <li>
-          <Link className="nav-link" to="/roster">
+          <Link className="nav-link" to="/empRoster">
             ROSTER
           </Link>
         </li>

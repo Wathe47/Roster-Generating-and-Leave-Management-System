@@ -126,11 +126,11 @@ class App extends Component {
                       <NavbarDashboard mode={mode} {...props} />
                     )}
                   ></Route>
-                  <Route
+                  {/* <Route
                     exact
                     path="/leave"
                     render={(props) => <Dashboard mode={mode} {...props} />}
-                  ></Route>
+                  ></Route> */}
                   <Route
                     exact
                     path="/leave"
