@@ -1,9 +1,7 @@
-const LeaveRequest = require('../models/leaveModel');
-// import leaveModel
-const APIFeatures = require('../utils/apiFeatures');
-const catchAsync = require('../utils/catchAsync');
-// import apiFeatures
-const AppError = require('../utils/appError');
+const LeaveRequest = require("../models/leaveModel");
+const APIFeatures = require("../utils/apiFeatures");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 
 exports.getAllLeaves = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
@@ -16,7 +14,7 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 
   // SEND RESPONSE
   res.status(200).json({
-    status: 'success',
+    status: "success",
     results: leaves.length,
     data: {
       leave: leaves,
@@ -25,14 +23,15 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.createLeave = catchAsync(async (req, res, next) => {
-  const saved = req.saveduser;
-  const newLeave = await LeaveRequest.create(req.body);
-
-  newLeave.employee = saved._id;
-  await newLeave.save();
+  const newLeave = await LeaveRequest.create({
+    employee: req.body.employee,
+    date: req.body.date,
+    type: req.body.type,
+    reason: req.body.reason,
+  });
 
   res.status(201).json({
-    status: 'success',
+    status: "success",
     data: {
       leave: newLeave,
     },
@@ -43,32 +42,51 @@ exports.getLeave = catchAsync(async (req, res, next) => {
   const leave = await LeaveRequest.findById(req.params.id);
 
   if (!leave) {
-    return next(new AppError('No leave found with that ID', 404));
+    return next(new AppError("No leave found with that ID", 404));
   }
 
   res.status(200).json({
-    status: 'success',
+    status: "success",
     data: {
       leave,
     },
   });
 });
-exports.getUserLeaves = catchAsync(async (req, res, next) => {
-  const leave = await LeaveRequest.find({ email: req.email });
 
-  if (!leave) {
-    return next(new AppError('No leave found with that ID', 404));
+exports.getMyLeaves = catchAsync(async (req, res, next) => {
+  const features = new APIFeatures(
+    LeaveRequest.find({ employee: req.body.employee }),
+    req.query
+  ).filter();
+
+  const leaves = await features.query;
+
+  if (!leaves) {
+    return next(new AppError("No leaves found with that ID", 404));
   }
+
   res.status(200).json({
-    status: 'success',
+    status: "success",
+    results: leaves.length,
     data: {
-      leave: leave,
+      leave: leaves,
     },
   });
 });
 
-//Saving Current user: After the protect route, we can use the saveuser function to save the current user in the request object
-// exports.saveuser = (req, res, next) => {
-//   req.saveduser = req.user;
-//   next();
-// };
+exports.approveLeave = catchAsync(async (req, res, next) => {
+  const leave = await LeaveRequest.findById(req.params.id);
+
+  if (!leave) return next(new AppError("No leave found with that ID", 404));
+
+  const { status, reason, approved_rejectedBy } = req.body;
+
+  leave.approveLeave(status, reason, approved_rejectedBy);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      leave,
+    },
+  });
+});

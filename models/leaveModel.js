@@ -1,12 +1,11 @@
-const mongoose = require('mongoose'); // import mongoose
+const mongoose = require("mongoose"); // import mongoose
 
 //const LeaveType = require('./leavetypeModel');
 
 const LeaveSchema = new mongoose.Schema(
   {
     employee: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      type: String,
     },
     date: [
       {
@@ -18,19 +17,18 @@ const LeaveSchema = new mongoose.Schema(
       type: Number,
     },
     type: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'LeaveType',
+      type: String,
     },
     status: {
       type: String,
-      default: 'Pending',
+      default: "Pending",
     },
     reason: {
       type: String,
     },
     approved_rejectedBy: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: "User",
     },
   },
   {
@@ -38,17 +36,23 @@ const LeaveSchema = new mongoose.Schema(
   }
 );
 
-LeaveSchema.pre('save', async function (next) {
+LeaveSchema.pre("save", async function (next) {
   this.noofdays = this.date.length;
   next();
 });
 
-LeaveSchema.methods.approveLeave = function (empID) {
-  this.status = 'Approved';
-  this.approved_rejectedBy = empID;
+LeaveSchema.methods.approveLeave = function (
+  status,
+  reason,
+  approved_rejectedBy
+) {
+  this.status = status;
+  this.reason = reason;
+  this.approved_rejectedBy = approved_rejectedBy;
+  this.save();
 };
 
-const Leave = mongoose.model('Leave-Request', LeaveSchema);
+const Leave = mongoose.model("Leave-Request", LeaveSchema);
 // create a model from the schema
 
 module.exports = Leave; // export the model
