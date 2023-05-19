@@ -26,6 +26,11 @@ router.route("/mine").get(leaveController.getMyLeaves);
 // @access Private (Admin Only)
 router.route("/approve/:id").put(leaveController.approveLeave);
 
+// @route GET api/leaves/eligibleList
+// @desc Get all eligibleList of users for given date
+// @access Private (Admin Only)
+router.route("/eligibleList/:date").get(leaveController.getEligibleList);
+
 router.route("/:id").get(leaveController.getLeave);
 
 module.exports = router; // Export the router

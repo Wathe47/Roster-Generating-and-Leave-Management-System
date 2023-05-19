@@ -1,4 +1,5 @@
 const LeaveRequest = require("../models/leaveModel");
+const User = require("../models/userModel");
 const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
@@ -87,6 +88,57 @@ exports.approveLeave = catchAsync(async (req, res, next) => {
     status: "success",
     data: {
       leave,
+    },
+  });
+});
+
+exports.getEligibleList = catchAsync(async (req, res, next) => {
+  const date = new Date(req.params.date);
+  console.log(date);
+  const jobTitle = [
+    "SoftwareEngineer",
+    "QualityAssuranceEngineer",
+    "ProjectManager",
+    "TechnicalWriter",
+  ];
+
+  let eligibleList = {
+    date: date,
+    eligibleEmployees: {},
+  };
+
+  jobTitle.forEach((title) => {
+    eligibleList.eligibleEmployees[title] = [];
+  });
+
+  const leaves = await LeaveRequest.find({
+    date: { $nin: date },
+  });
+
+  if (!leaves) {
+    return next(new AppError("No leaves found with that ID", 404));
+  }
+
+  console.log(eligibleList.eligibleEmployees["SoftwareEngineer"]);
+
+  await Promise.all(
+    leaves.map(async (leave) => {
+      const eligibleEmp = await User.findById(leave.employee);
+
+      if (eligibleEmp) {
+        const role = eligibleEmp.jobTitle.split(" ").join("");
+
+        eligibleList.eligibleEmployees[role].push(eligibleEmp._id.toString());
+      }
+    })
+  );
+
+  console.log(eligibleList.eligibleEmployees["SoftwareEngineer"]);
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      eligibleList: eligibleList,
     },
   });
 });

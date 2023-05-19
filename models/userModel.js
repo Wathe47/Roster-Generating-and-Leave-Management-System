@@ -91,13 +91,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-/*userSchema.pre("save", function (next) {
-  if (!this.empID) {
-    this.empID = uuidv4();
-  }
-  next();
-});*/
-
 //?PRE-MIDDLEWARE - DOCUMENT MIDDLEWARE: runs before .save() and .create()
 
 userSchema.pre("save", async function (next) {
