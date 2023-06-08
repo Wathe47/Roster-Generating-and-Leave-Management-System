@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require("moment");
-
-//const LeaveType = require('./leavetypeModel');
 
 const LeaveSchema = new mongoose.Schema(
   {

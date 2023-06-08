@@ -3,6 +3,7 @@ const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
 const passport = require("passport");
 const multer = require("multer");
+const Email = require("../utils/email");
 
 const router = express.Router();
 
@@ -98,5 +99,10 @@ router.get(
     });
   }
 );
+
+//TESTING ROUTES
+router.post("/testing-email", userController.testingEmail);
+
+router.post("/generate-test-users", userController.generateTestUsers);
 
 module.exports = router;

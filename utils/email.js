@@ -1,77 +1,60 @@
-const nodemailer = require('nodemailer');
+const nodemailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
 
-// module.exports = class Email {
-//   constructor(user, url) {
-//     this.to = user.email;
-//     this.firstName = user.name.split(' ')[0];
-//     this.url = url;
-//     this.from = `tgo <${process.env.EMAIL_FROM}>`;
-//   }
+module.exports = class Email {
+  constructor(user, url) {
+    this.to = user.email;
+    this.firstName = user.empName;
+    this.url = url;
+    this.from = `tgo <${process.env.EMAIL_FROM}>`;
+  }
 
-//   newTransport() {
-//     if (process.env.NODE_ENV === 'production') {
-//       // Sendgrid
-//       return nodemailer.createTransport({
-//         service: 'SendGrid',
-//         auth: {
-//           user: process.env.SENDGRID_USERNAME,
-//           pass: process.env.SENDGRID_PASSWORD,
-//         },
-//       });
-//     }
+  newTransport() {
+    if (process.env.NODE_ENV === "production") {
+      //SEND EMAILS IN SENDINBLUE
+      return nodemailer.createTransport({
+        host: process.env.SENDINBLUE_HOST,
+        port: process.env.SENDINBLUE_PORT,
+        auth: {
+          user: process.env.SENDINBLUE_EMAIL,
+          pass: process.env.SENDINBLUE_PASSWORD,
+        },
+      });
+    }
+    //SEND EMAILS IN MAILTRAP
+    return nodemailer.createTransport({
+      host: process.env.MAILTRAP_HOST,
+      port: process.env.MAILTRAP_PORT,
+      auth: {
+        user: process.env.MAILTRAP_USERNAME,
+        pass: process.env.MAILTRAP_PASSWORD,
+      },
+    });
+  }
 
-//     return nodemailer.createTransport({
-//       host: process.env.EMAIL_HOST,
-//       port: process.env.EMAIL_PORT,
-//       auth: {
-//         user: process.env.EMAIL_USERNAME,
-//         pass: process.env.EMAIL_PASSWORD,
-//       },
-//     });
-//   }
+  async send(template, subject) {
+    //HTML TEMPLATE
+    const html = fs.readFileSync(
+      path.join(__dirname, `../views/email/${template}.html`),
+      "utf-8"
+    );
 
-//   async send(template, subject) {
-//     //send the actual email
-//     //1) Render HTML based on a pug template
+    //EMAIL OPTIONS
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html: html
+        .replace("{%firstName%}", this.firstName)
+        .replace("{%url%}", this.url),
+    };
 
-//     //2) Define email options
-//     const mailOptions = {
-//       from: this.from,
-//       to: this.to,
-//       subject,
-//       html,
-//       text: htmlToText.fromString(html),
-//     };
+    //CREATE A TRANSPORT AND SEND EMAIL
+    await this.newTransport().sendMail(mailOptions);
+  }
 
-//     //3) Create a transport and send email
-//     await this.newTransport().sendMail(mailOptions);
-//   }
-
-//   async sendWelcome() {
-//     await this.send('welcome', 'Welcome to the tgo family!');
-//   }
-// };
-
-const sendEmail = async (options) => {
-  // 1) Create a transporter
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
-    },
-  });
-  // 2) Define the email options
-  const mailOptions = {
-    from: 'tgo <admin@tgo.io>',
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-  };
-
-  // 3) Actually send the email
-  await transporter.sendMail(mailOptions);
+  async sendTesting() {
+    await this.send("Testing", "Testing-Email");
+  }
 };
-
-module.exports = sendEmail;

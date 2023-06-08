@@ -13,11 +13,8 @@ const AppError = require("./utils/appError");
 const globalErrorHandler = require("./controllers/errorController");
 
 const leaveRoutes = require("./routes/leaveRoutes");
-// import leaveRoutes
 const userRoutes = require("./routes/userRoutes");
-// import userRoutes
-const departmentRoutes = require("./routes/departmentRoutes");
-const rosterRoutes = require("./routes/roster");
+const rosterRoutes = require("./routes/rosterRoutes");
 
 const app = express();
 // create an express app
@@ -89,8 +86,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 app.use("/api/leaves", leaveRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/department", departmentRoutes);
-app.use("/api/roster", rosterRoutes);
+app.use("/api/rosters", rosterRoutes);
 
 //Handling unhandled routes
 app.all("*", (req, res, next) => {
