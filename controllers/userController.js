@@ -4,7 +4,6 @@ const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const Email = require("../utils/email");
 const fs = require("fs");
-const MoreInfo = require("../models/moreinfoModel");
 
 const filterObj = (Obj, ...allowedFields) => {
   //...allowedFields is an array of strings
@@ -119,51 +118,51 @@ exports.deleteUser = (req, res) => {
   });
 };
 
-// add more info to the user
-exports.addMoreInfo = catchAsync(async (req, res, next) => {
-  const { employee, distance, isPregnant, isInfantChildren } = req.body;
+// // add more info to the user
+// exports.addMoreInfo = catchAsync(async (req, res, next) => {
+//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
 
-  const user = await User.findById(employee);
+//   const user = await User.findById(employee);
 
-  if (!user) {
-    return next(new AppError("There is no user with relevant ID.", 404));
-  }
+//   if (!user) {
+//     return next(new AppError("There is no user with relevant ID.", 404));
+//   }
 
-  const moreInfo = await MoreInfo.create({
-    employee,
-    distance,
-    isPregnant,
-    isInfantChildren,
-  });
+//   const moreInfo = await MoreInfo.create({
+//     employee,
+//     distance,
+//     isPregnant,
+//     isInfantChildren,
+//   });
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      moreInfo,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       moreInfo,
+//     },
+//   });
+// });
 
-exports.updateMoreInfo = catchAsync(async (req, res, next) => {
-  const { employee, distance, isPregnant, isInfantChildren } = req.body;
+// exports.updateMoreInfo = catchAsync(async (req, res, next) => {
+//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
 
-  const moreInfo = await MoreInfo.findOneAndUpdate(employee, {
-    distance,
-    isPregnant,
-    isInfantChildren,
-  });
+//   const moreInfo = await MoreInfo.findOneAndUpdate(employee, {
+//     distance,
+//     isPregnant,
+//     isInfantChildren,
+//   });
 
-  if (!moreInfo) {
-    return next(new AppError("There is no more info with relevant ID.", 404));
-  }
+//   if (!moreInfo) {
+//     return next(new AppError("There is no more info with relevant ID.", 404));
+//   }
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      moreInfo,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       moreInfo,
+//     },
+//   });
+// });
 
 // For testing purposes only
 exports.testingEmail = catchAsync(async (req, res) => {

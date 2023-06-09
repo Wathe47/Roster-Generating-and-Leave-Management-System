@@ -1,0 +1,44 @@
+[
+  {
+    "employee": "64827ce262cb1e9972b682ed",
+    "date": "2023-06-12",
+    "type": "sick",
+    "status": "approved",
+    "reason": "approved",
+    "approved_rejectedBy": "64827ce262cb1e9972b682ec"
+  },
+  {
+    "employee": "64827ce262cb1e9972b682f1",
+    "date": "2023-06-14",
+    "type": "sick"
+  },
+  {
+    "employee": "64827ce262cb1e9972b682f0",
+    "date": "2023-06-15",
+    "type": "sick"
+  },
+  {
+    "employee": "64827ce262cb1e9972b682ee",
+    "date": "2023-06-13",
+    "type": "sick",
+    "status": "approved",
+    "reason": "approved",
+    "approved_rejectedBy": "64827ce262cb1e9972b682ec"
+  },
+  {
+    "employee": "64827ce262cb1e9972b682f3",
+    "date": "2023-06-13",
+    "type": "sick",
+    "status": "approved",
+    "reason": "approved",
+    "approved_rejectedBy": "64827ce262cb1e9972b682ec"
+  },
+  {
+    "employee": "64827ce262cb1e9972b682f6",
+    "date": "2023-06-13",
+    "type": "sick",
+    "status": "approved",
+    "reason": "approved",
+    "approved_rejectedBy": "64827ce262cb1e9972b682ec"
+  }
+]

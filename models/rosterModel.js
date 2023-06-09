@@ -7,7 +7,13 @@ const rosterSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      employees: [
+      onSiteEmp: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      remoteEmp: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -19,7 +25,13 @@ const rosterSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      employees: [
+      onSiteEmp: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      remoteEmp: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -31,7 +43,13 @@ const rosterSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      employees: [
+      onSiteEmp: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      remoteEmp: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -43,7 +61,13 @@ const rosterSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      employees: [
+      onSiteEmp: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      remoteEmp: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",
@@ -55,7 +79,13 @@ const rosterSchema = new mongoose.Schema(
         type: Boolean,
         default: false,
       },
-      employees: [
+      onSiteEmp: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+      ],
+      remoteEmp: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",

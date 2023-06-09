@@ -3,16 +3,12 @@ const mongoose = require("mongoose");
 const LeaveSchema = new mongoose.Schema(
   {
     employee: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
-    date: [
-      {
-        type: Date,
-        required: true,
-      },
-    ],
-    noofdays: {
-      type: Number,
+    date: {
+      type: Date,
+      required: true,
     },
     type: {
       type: String,

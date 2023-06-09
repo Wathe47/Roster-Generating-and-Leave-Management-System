@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const authController = require("../controllers/authController");
+const testController = require("../controllers/testController");
 const passport = require("passport");
 const multer = require("multer");
 const Email = require("../utils/email");
@@ -103,6 +104,6 @@ router.get(
 //TESTING ROUTES
 router.post("/testing-email", userController.testingEmail);
 
-router.post("/generate-test-users", userController.generateTestUsers);
+router.post("/generate-test-users", testController.generateDummyUsers);
 
 module.exports = router;
