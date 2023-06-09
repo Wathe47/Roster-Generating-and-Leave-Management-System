@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const rosterSchema = new mongoose.Schema(
   {
     monday: {
+      date: {
+        type: Date,
+      },
       holiday: {
         type: Boolean,
         default: false,
@@ -21,6 +24,9 @@ const rosterSchema = new mongoose.Schema(
       ],
     },
     tuesday: {
+      date: {
+        type: Date,
+      },
       holiday: {
         type: Boolean,
         default: false,
@@ -39,6 +45,9 @@ const rosterSchema = new mongoose.Schema(
       ],
     },
     wednesday: {
+      date: {
+        type: Date,
+      },
       holiday: {
         type: Boolean,
         default: false,
@@ -57,6 +66,9 @@ const rosterSchema = new mongoose.Schema(
       ],
     },
     thursday: {
+      date: {
+        type: Date,
+      },
       holiday: {
         type: Boolean,
         default: false,
@@ -75,6 +87,9 @@ const rosterSchema = new mongoose.Schema(
       ],
     },
     friday: {
+      date: {
+        type: Date,
+      },
       holiday: {
         type: Boolean,
         default: false,

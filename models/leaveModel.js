@@ -30,11 +30,6 @@ const LeaveSchema = new mongoose.Schema(
   }
 );
 
-LeaveSchema.pre("save", async function (next) {
-  this.noofdays = this.date.length;
-  next();
-});
-
 LeaveSchema.methods.approveLeave = function (
   status,
   reason,
@@ -47,6 +42,5 @@ LeaveSchema.methods.approveLeave = function (
 };
 
 const Leave = mongoose.model("Leave-Request", LeaveSchema);
-// create a model from the schema
 
-module.exports = Leave; // export the model
+module.exports = Leave;
