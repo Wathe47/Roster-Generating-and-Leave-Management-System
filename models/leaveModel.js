@@ -7,7 +7,7 @@ const LeaveSchema = new mongoose.Schema(
       ref: "User",
     },
     date: {
-      type: Date,
+      type: String,
       required: true,
     },
     type: {
@@ -15,7 +15,7 @@ const LeaveSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      default: "Pending",
+      default: "pending",
     },
     reason: {
       type: String,

@@ -39,9 +39,6 @@ const createSendToken = (user, statusCode, res) => {
   res.status(statusCode).json({
     status: "success",
     token,
-    data: {
-      user,
-    },
   });
 };
 
@@ -108,6 +105,7 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError("The user belonging to this token does no longer exist", 401)
     );
   }
+  console.log(decoded.iat);
 
   // 4) Check if user changed password after the token was issued
   if (currentUser.changedPasswordAfter(decoded.iat)) {
@@ -118,6 +116,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
+  console.log(req.user);
   next();
 });
 

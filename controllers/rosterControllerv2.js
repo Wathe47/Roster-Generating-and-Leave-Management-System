@@ -1,6 +1,7 @@
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
 const LeaveRequest = require("../models/leaveModel");
+const { isAHoliday } = require("../utils/holidayAPI");
 
 const catchAsync = require("../utils/catchAsync");
 const { google } = require("googleapis");
@@ -37,6 +38,37 @@ async function getHolidays(startDate) {
     console.error(err);
   }
   return holidays;
+}
+
+async function isAHolidayK(enteredDate) {
+  const startDate = new Date(enteredDate);
+  const endDate = new Date(enteredDate);
+  endDate.setDate(startDate.getDate() + 1);
+
+  try {
+    const response = await calendar.events.list({
+      key: apiKey,
+      calendarId: calendarId,
+      timeMin: startDate.toISOString(),
+      timeMax: endDate.toISOString(),
+      maxResults: 100,
+      singleEvents: true,
+      orderBy: "startTime",
+    });
+
+    const events = response.data.items;
+
+    if (events.length) {
+      events.map((event) => {
+        const start = event.start.dateTime || event.start.date;
+        return true;
+      });
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 async function getWorkingDays(startDate) {
@@ -355,7 +387,8 @@ exports.getWorkingDays = catchAsync(async (req, res, next) => {
 });
 
 exports.testingFunctions = catchAsync(async (req, res, next) => {
-  const result = getAllDaysInWeek("2023-06-12");
+  const result = await isAHoliday("2023-05-04");
+  console.log(result);
   res.status(200).json({
     status: "success",
   });

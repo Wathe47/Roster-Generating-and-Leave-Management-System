@@ -128,6 +128,7 @@ userSchema.methods.correctPassword = async function (
 };
 
 userSchema.methods.changedPasswordafter = function (JWTTimestamp) {
+  console.log("working");
   if (this.passwordChangedAt) {
     //Default value of passwordChangedAt is undefined. If it is defined, that means password has been changed.
     const changedTimestamp = parseInt(

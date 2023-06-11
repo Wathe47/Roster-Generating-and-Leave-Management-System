@@ -64,35 +64,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.addToDepartment = catchAsync(async (req, res, next) => {
-  const { employeeID, departmentdetails, current, workSince, workTo } =
-    req.body;
-
-  const newassigneddepartment = {
-    departmentdetails,
-    current,
-    workSince,
-    workTo,
-  };
-
-  const user = await User.findByIdAndUpdate(employeeID);
-
-  if (user.departments.length > null) {
-    user.departments[0].current = false;
-    user.departments[0].workTo = workSince;
-  }
-
-  user.departments.unshift(newassigneddepartment);
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      user,
-    },
-  });
-});
-
 exports.getUser = (req, res) => {
   res.status(500).json({
     status: "error",
@@ -117,52 +88,6 @@ exports.deleteUser = (req, res) => {
     message: "This route is not yet defined!",
   });
 };
-
-// // add more info to the user
-// exports.addMoreInfo = catchAsync(async (req, res, next) => {
-//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
-
-//   const user = await User.findById(employee);
-
-//   if (!user) {
-//     return next(new AppError("There is no user with relevant ID.", 404));
-//   }
-
-//   const moreInfo = await MoreInfo.create({
-//     employee,
-//     distance,
-//     isPregnant,
-//     isInfantChildren,
-//   });
-
-//   res.status(200).json({
-//     status: "success",
-//     data: {
-//       moreInfo,
-//     },
-//   });
-// });
-
-// exports.updateMoreInfo = catchAsync(async (req, res, next) => {
-//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
-
-//   const moreInfo = await MoreInfo.findOneAndUpdate(employee, {
-//     distance,
-//     isPregnant,
-//     isInfantChildren,
-//   });
-
-//   if (!moreInfo) {
-//     return next(new AppError("There is no more info with relevant ID.", 404));
-//   }
-
-//   res.status(200).json({
-//     status: "success",
-//     data: {
-//       moreInfo,
-//     },
-//   });
-// });
 
 // For testing purposes only
 exports.testingEmail = catchAsync(async (req, res) => {

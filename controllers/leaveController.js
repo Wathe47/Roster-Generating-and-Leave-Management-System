@@ -3,6 +3,9 @@ const User = require("../models/userModel");
 const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const { isAHoliday, isWeekend } = require("../utils/holidayAPI");
+
+const { ObjectId } = require("mongoose").Types;
 
 exports.getAllLeaves = catchAsync(async (req, res, next) => {
   // EXECUTE QUERY
@@ -24,11 +27,55 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.createLeave = catchAsync(async (req, res, next) => {
+  const { employee, date, type, reason } = req.body;
+
+  //FIRST CHECK EMPLOYEE IS EXISTS
+  const emp = await User.findById(employee);
+
+  if (!emp) {
+    return next(new AppError("No employee found with that ID", 404));
+  }
+
+  //CHECK WHETHER DATE IS WEEKEND OR NOT
+  const weekend = isWeekend(date);
+  if (weekend) {
+    return next(new AppError("Failed! Selected date is not a weekday", 404));
+  }
+
+  //CHECK WHETHER DATE IS HOLIDAY OR NOT
+  const Holiday = await isAHoliday(date);
+  if (Holiday) {
+    return next(new AppError("Failed! Selected date is a holiday", 404));
+  }
+
+  //CHECK WHETHER EMPLOYEE ALREADY APPLIED LEAVE ON THAT DATE
+  const alreadyApplied = await LeaveRequest.findOne({
+    employee: ObjectId(employee),
+    date: date,
+    status: "pending",
+  });
+
+  if (alreadyApplied) {
+    return next(new AppError("Leave Request already applied.", 404));
+  }
+
+  //CHECK WHETHER EMPLOYEE ALREADY APPLIED LEAVE ON THAT DATE
+  const approvedLeave = await LeaveRequest.findOne({
+    employee: ObjectId(employee),
+    date: date,
+    status: "approved",
+  });
+
+  if (approvedLeave) {
+    return next(new AppError("Leave Request already approved.", 404));
+  }
+
+  //IF ALL CHECKS ARE PASSED THEN CREATE LEAVE REQUEST
   const newLeave = await LeaveRequest.create({
-    employee: req.body.employee,
-    date: req.body.date,
-    type: req.body.type,
-    reason: req.body.reason,
+    employee: employee,
+    date: date,
+    type: type,
+    reason: reason,
   });
 
   res.status(201).json({
@@ -55,14 +102,18 @@ exports.getLeave = catchAsync(async (req, res, next) => {
 });
 
 exports.getMyLeaves = catchAsync(async (req, res, next) => {
+  const { employee } = req.body;
+
+  //GENERATE QUERY
   const features = new APIFeatures(
-    LeaveRequest.find({ employee: req.body.employee }),
+    LeaveRequest.find({ employee }),
     req.query
   ).filter();
 
   const leaves = await features.query;
+  console.log(leaves);
 
-  if (!leaves) {
+  if (!leaves.length) {
     return next(new AppError("No leaves found with that ID", 404));
   }
 
@@ -76,69 +127,53 @@ exports.getMyLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.approveLeave = catchAsync(async (req, res, next) => {
-  const leave = await LeaveRequest.findById(req.params.id);
+  const { leaveID, status, reason, approved_rejectedBy } = req.body;
 
+  //CHECK WHETHER LEAVE IS EXISTS WITH THAT ID
+
+  const leave = await LeaveRequest.findById(leaveID);
   if (!leave) return next(new AppError("No leave found with that ID", 404));
 
-  const { status, reason, approved_rejectedBy } = req.body;
+  //CHECK WHETHER LEAVE IS ALREADY APPROVED OR REJECTED
 
+  if (leave.status === "approved" || leave.status === "rejected") {
+    return next(
+      new AppError("Leave is already " + leave.status + " by admin", 404)
+    );
+  }
+
+  //CHECK WHETHER SAME USER IS APPROVING OR REJECTING THE LEAVE
+
+  if (leave.employee.toString() === approved_rejectedBy) {
+    return next(
+      new AppError("You can't approve or reject your own leave request", 404)
+    );
+  }
+
+  //AUTHENTICATE THE ADMIN USER
+
+  const Adminuser = await User.findById(approved_rejectedBy);
+  if (!Adminuser) {
+    return next(new AppError("No admin user found with that ID", 404));
+  }
+
+  console.log(Adminuser.jobTitle);
+  const allowedJobTitles = [
+    "Chief Executive Officer",
+    "Chief Operating Officer",
+    "HR/Administrative Employee",
+  ];
+
+  if (!allowedJobTitles.includes(Adminuser.jobTitle)) {
+    return next(new AppError("Not authorized to perform this action.", 404));
+  }
+  //IF ALL CHECKS ARE PASSED THEN APPROVE OR REJECT THE LEAVE
   leave.approveLeave(status, reason, approved_rejectedBy);
 
   res.status(200).json({
     status: "success",
     data: {
       leave,
-    },
-  });
-});
-
-exports.getEligibleList = catchAsync(async (req, res, next) => {
-  const date = new Date(req.params.date);
-  console.log(date);
-  const jobTitle = [
-    "SoftwareEngineer",
-    "QualityAssuranceEngineer",
-    "ProjectManager",
-    "TechnicalWriter",
-  ];
-
-  let eligibleList = {
-    date: date,
-    eligibleEmployees: {},
-  };
-
-  jobTitle.forEach((title) => {
-    eligibleList.eligibleEmployees[title] = [];
-  });
-
-  const leaves = await LeaveRequest.find({
-    date: { $nin: date },
-  });
-
-  if (!leaves) {
-    return next(new AppError("No leaves found with that ID", 404));
-  }
-
-  console.log(eligibleList.eligibleEmployees["SoftwareEngineer"]);
-
-  await Promise.all(
-    leaves.map(async (leave) => {
-      const eligibleEmp = await User.findById(leave.employee);
-
-      if (eligibleEmp) {
-        const role = eligibleEmp.jobTitle.split(" ").join("");
-
-        eligibleList.eligibleEmployees[role].push(eligibleEmp._id.toString());
-      }
-    })
-  );
-
-  console.log(eligibleList.eligibleEmployees["SoftwareEngineer"]);
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      eligibleList: eligibleList,
     },
   });
 });

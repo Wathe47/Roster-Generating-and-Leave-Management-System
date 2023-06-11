@@ -12,24 +12,23 @@ router.route("/").get(leaveController.getAllLeaves);
 // @route POST api/leaves
 // @desc Request Leaves
 // @access Private (Login Users)
-router.route("/").post(leaveController.createLeave);
+router.route("/").post(authController.protect, leaveController.createLeave);
 
 // @route GET api/leaves/mine
-//        - GET api/leaves/mine?status=Approved
-//        - GET api/leaves/mine?status=Pending
+//        - GET api/leaves/mine?status=approved
+//        - GET api/leaves/mine?status=pending
 // @desc Get all leaves of a user
 // @access Private (Login Users)
 router.route("/mine").get(leaveController.getMyLeaves);
 
-// @route PUT api/leaves/approve/:id
+// @route PUT api/leaves/approve
 // @desc Approve/Reject Leave
 // @access Private (Admin Only)
-router.route("/approve/:id").put(leaveController.approveLeave);
+router.route("/approve").put(leaveController.approveLeave);
 
 // @route GET api/leaves/eligibleList
 // @desc Get all eligibleList of users for given date
 // @access Private (Admin Only)
-router.route("/eligibleList/:date").get(leaveController.getEligibleList);
 
 router.route("/:id").get(leaveController.getLeave);
 
