@@ -2,8 +2,6 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
-//const Department = require('./departmentModel');
-//const AppError = require('../utils/appError');
 
 const userSchema = new mongoose.Schema(
   {
@@ -42,24 +40,6 @@ const userSchema = new mongoose.Schema(
       minlength: 8,
       select: false,
     },
-    departments: [
-      {
-        departmentdetails: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "Department",
-        },
-        current: {
-          type: Boolean,
-          default: true,
-        },
-        workSince: {
-          type: Date,
-        },
-        workTo: {
-          type: Date,
-        },
-      },
-    ],
     passwordConfirm: {
       type: String,
       required: [true, `Confirm Employee's password !!`],
@@ -79,21 +59,30 @@ const userSchema = new mongoose.Schema(
     active: {
       type: Boolean,
       default: true,
-      select: false,
     },
+    distance: {
+      type: Number,
+    },
+    distancePriority: {
+      type: Number,
+    },
+    isPregnant: {
+      type: Boolean,
+      default: false,
+    },
+    hasChildrenBelow5: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  {
+    timestamps: true,
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
-
-/*userSchema.pre("save", function (next) {
-  if (!this.empID) {
-    this.empID = uuidv4();
-  }
-  next();
-});*/
 
 //?PRE-MIDDLEWARE - DOCUMENT MIDDLEWARE: runs before .save() and .create()
 
@@ -127,20 +116,6 @@ userSchema.pre(/^find/, function (next) {
   // $ne - not equal to. So we are finding all the documents where active is not equal to false.
   next();
 });
-
-// userSchema.pre('save', async function (next) {
-//   try {
-//     const department = await Department.findById(this.currentdepartment);
-//     if (!department)
-//       return next(new AppError('No department found with that ID', 404));
-
-//     department.employees.addToSet(this._id);
-//     await department.save({ validateBeforeSave: false });
-//     next();
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 //?INSTANCE METHOD - available on all documents of a certain collection
 

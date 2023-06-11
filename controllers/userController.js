@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 //const APIFeatures = require('../utils/apiFeatures');
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
+const Email = require("../utils/email");
+const fs = require("fs");
 
 const filterObj = (Obj, ...allowedFields) => {
   //...allowedFields is an array of strings
@@ -115,3 +117,82 @@ exports.deleteUser = (req, res) => {
     message: "This route is not yet defined!",
   });
 };
+
+// // add more info to the user
+// exports.addMoreInfo = catchAsync(async (req, res, next) => {
+//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
+
+//   const user = await User.findById(employee);
+
+//   if (!user) {
+//     return next(new AppError("There is no user with relevant ID.", 404));
+//   }
+
+//   const moreInfo = await MoreInfo.create({
+//     employee,
+//     distance,
+//     isPregnant,
+//     isInfantChildren,
+//   });
+
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       moreInfo,
+//     },
+//   });
+// });
+
+// exports.updateMoreInfo = catchAsync(async (req, res, next) => {
+//   const { employee, distance, isPregnant, isInfantChildren } = req.body;
+
+//   const moreInfo = await MoreInfo.findOneAndUpdate(employee, {
+//     distance,
+//     isPregnant,
+//     isInfantChildren,
+//   });
+
+//   if (!moreInfo) {
+//     return next(new AppError("There is no more info with relevant ID.", 404));
+//   }
+
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       moreInfo,
+//     },
+//   });
+// });
+
+// For testing purposes only
+exports.testingEmail = catchAsync(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new AppError("There is no user with email address.", 404));
+  }
+
+  console.log(user.empName);
+
+  return new Email(user, "http://localhost:3000/").sendTesting();
+});
+
+exports.generateTestUsers = catchAsync(async (req, res, next) => {
+  const usersFilePath = `${__dirname}/../dev-data/users.json`;
+
+  const usersData = fs.readFileSync(usersFilePath, "utf-8");
+
+  const users = JSON.parse(usersData);
+
+  const createdUsers = await User.create(users);
+
+  res.status(200).json({
+    status: "success",
+    message: "Test Users created successfully!",
+    data: {
+      numberOfUsers: createdUsers.length,
+    },
+  });
+});
