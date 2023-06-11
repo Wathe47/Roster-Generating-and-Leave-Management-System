@@ -1,11 +1,20 @@
 const express = require("express");
 const rosterController = require("../controllers/rosterControllerv2");
+const authController = require("../controllers/authController");
 
 const router = express.Router();
 
-// @route GET api/rosters/workingDays
+// @route POST api/rosters/
 // @desc Get all working days in a given week
 // @access Private (Admin Only)
+
+router.route("/").post(authController.protect, rosterController.createRoster);
+
+// @route GET api/rosters/:id
+// @desc Get a roster by id
+// @access Private Login Required
+
+router.route("/:id").get(authController.protect, rosterController.getRoster);
 
 router.route("/working-days").get(rosterController.getWorkingDays);
 

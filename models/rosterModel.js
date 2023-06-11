@@ -2,116 +2,38 @@ const mongoose = require("mongoose");
 
 const rosterSchema = new mongoose.Schema(
   {
-    monday: {
-      date: {
-        type: Date,
-      },
-      holiday: {
-        type: Boolean,
-        default: false,
-      },
-      onSiteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      remoteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+    period: {
+      type: String,
     },
-    tuesday: {
-      date: {
-        type: Date,
+    days: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Day",
       },
-      holiday: {
-        type: Boolean,
-        default: false,
-      },
-      onSiteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      remoteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-    },
-    wednesday: {
-      date: {
-        type: Date,
-      },
-      holiday: {
-        type: Boolean,
-        default: false,
-      },
-      onSiteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      remoteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-    },
-    thursday: {
-      date: {
-        type: Date,
-      },
-      holiday: {
-        type: Boolean,
-        default: false,
-      },
-      onSiteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      remoteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-    },
-    friday: {
-      date: {
-        type: Date,
-      },
-      holiday: {
-        type: Boolean,
-        default: false,
-      },
-      onSiteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
-      remoteEmp: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-        },
-      ],
+    ],
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
   },
   {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true,
   }
 );
+
+rosterSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: "days",
+    select: "-_id -createdAt -updatedAt -__v",
+  }).populate({
+    path: "createdBy",
+    select: "name jobTitle",
+  });
+
+  next();
+});
 
 const Roster = mongoose.model("Roster", rosterSchema);
 
