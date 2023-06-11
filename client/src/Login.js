@@ -28,7 +28,7 @@ const Login = () => {
     try {
       const response = await axios.post(
         LOGIN_URL,
-        JSON.stringify({ empID: user, password: pwd }),
+        JSON.stringify({ email: user, password: pwd }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -86,10 +86,10 @@ const Login = () => {
           </p>
           <h1>Sign In</h1>
           <form onSubmit={handleSubmit}>
-            <label htmlFor="userid">UserID:</label>
+            <label htmlFor="useremail">UserEmail:</label>
             <input
               type="text"
-              id="userid"
+              id="useremail"
               ref={userRef}
               autoComplete="off"
               onChange={(e) => setUser(e.target.value)}
