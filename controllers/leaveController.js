@@ -4,6 +4,8 @@ const APIFeatures = require("../utils/apiFeatures");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 const { isAHoliday, isWeekend } = require("../utils/holidayAPI");
+const Email = require("../utils/email");
+const { admin } = require("googleapis/build/src/apis/admin");
 
 const { ObjectId } = require("mongoose").Types;
 
@@ -27,13 +29,13 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.createLeave = catchAsync(async (req, res, next) => {
-  const { employee, date, type, reason } = req.body;
+  const { date, type, reason } = req.body;
+  const currentemp = req.user;
+  const employee = currentemp._id.toString();
 
   //FIRST CHECK EMPLOYEE IS EXISTS
-  const emp = await User.findById(employee);
-
-  if (!emp) {
-    return next(new AppError("No employee found with that ID", 404));
+  if (!employee) {
+    return next(new AppError("No Employee", 404));
   }
 
   //CHECK WHETHER DATE IS WEEKEND OR NOT
@@ -78,6 +80,19 @@ exports.createLeave = catchAsync(async (req, res, next) => {
     reason: reason,
   });
 
+  //SEND THE NOTIFICATION EMAIL
+  const jobTitles = [
+    "Chief Executive Officer",
+    "Chief Operating Officer",
+    "Human Resources/Administrative",
+  ];
+  const adminUsers = await User.find({ jobTitle: { $in: jobTitles } });
+  const url = "#";
+
+  adminUsers.forEach(async (adminUser) => {
+    await new Email(adminUser, url, currentemp, newLeave).sendNotifyLeave();
+  });
+
   res.status(201).json({
     status: "success",
     data: {
@@ -102,7 +117,7 @@ exports.getLeave = catchAsync(async (req, res, next) => {
 });
 
 exports.getMyLeaves = catchAsync(async (req, res, next) => {
-  const { employee } = req.body;
+  const employee = req.user._id.toString();
 
   //GENERATE QUERY
   const features = new APIFeatures(
@@ -127,7 +142,10 @@ exports.getMyLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.approveLeave = catchAsync(async (req, res, next) => {
-  const { leaveID, status, reason, approved_rejectedBy } = req.body;
+  const { leaveID, status, reason } = req.body;
+
+  const currentemp = req.user;
+  const approved_rejectedBy = currentemp._id.toString();
 
   //CHECK WHETHER LEAVE IS EXISTS WITH THAT ID
 
@@ -150,25 +168,29 @@ exports.approveLeave = catchAsync(async (req, res, next) => {
     );
   }
 
-  //AUTHENTICATE THE ADMIN USER
-
-  const Adminuser = await User.findById(approved_rejectedBy);
-  if (!Adminuser) {
-    return next(new AppError("No admin user found with that ID", 404));
-  }
-
-  console.log(Adminuser.jobTitle);
-  const allowedJobTitles = [
-    "Chief Executive Officer",
-    "Chief Operating Officer",
-    "HR/Administrative Employee",
-  ];
-
-  if (!allowedJobTitles.includes(Adminuser.jobTitle)) {
-    return next(new AppError("Not authorized to perform this action.", 404));
-  }
   //IF ALL CHECKS ARE PASSED THEN APPROVE OR REJECT THE LEAVE
   leave.approveLeave(status, reason, approved_rejectedBy);
+
+  //SEND THE NOTIFICATION EMAIL
+  const requestedleaveUser = await User.findById(leave.employee.toString());
+
+  if (leave.status === "approved") {
+    await new Email(
+      requestedleaveUser,
+      "#",
+      currentemp,
+      leave
+    ).sendLeaveApproved();
+  }
+
+  if (leave.status === "rejected") {
+    await new Email(
+      requestedleaveUser,
+      "#",
+      currentemp,
+      leave
+    ).sendLeaveRejected();
+  }
 
   res.status(200).json({
     status: "success",

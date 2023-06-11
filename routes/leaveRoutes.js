@@ -19,12 +19,22 @@ router.route("/").post(authController.protect, leaveController.createLeave);
 //        - GET api/leaves/mine?status=pending
 // @desc Get all leaves of a user
 // @access Private (Login Users)
-router.route("/mine").get(leaveController.getMyLeaves);
+router.route("/mine").get(authController.protect, leaveController.getMyLeaves);
 
 // @route PUT api/leaves/approve
 // @desc Approve/Reject Leave
 // @access Private (Admin Only)
-router.route("/approve").put(leaveController.approveLeave);
+router
+  .route("/approve")
+  .put(
+    authController.protect,
+    authController.restrictTo(
+      "Chief Executive Officer",
+      "Chief Operating Officer",
+      "Human Resources/Administrative"
+    ),
+    leaveController.approveLeave
+  );
 
 // @route GET api/leaves/eligibleList
 // @desc Get all eligibleList of users for given date

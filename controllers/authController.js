@@ -105,10 +105,9 @@ exports.protect = catchAsync(async (req, res, next) => {
       new AppError("The user belonging to this token does no longer exist", 401)
     );
   }
-  console.log(decoded.iat);
 
   // 4) Check if user changed password after the token was issued
-  if (currentUser.changedPasswordAfter(decoded.iat)) {
+  if (currentUser.whetherPasswordChanged(decoded.iat)) {
     return next(
       new AppError("User recently changed password! Please log in again", 401)
     );
@@ -116,15 +115,13 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT ACCESS TO PROTECTED ROUTE
   req.user = currentUser;
-  console.log(req.user);
   next();
 });
 
 // Authorization check middleware
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
-    // roles ['admin', 'lead-guide']. role='user'
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.user.jobTitle)) {
       return next(
         new AppError("You do not have permission to perform this action", 403)
       );

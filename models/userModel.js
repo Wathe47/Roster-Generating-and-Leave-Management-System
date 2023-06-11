@@ -141,6 +141,19 @@ userSchema.methods.changedPasswordafter = function (JWTTimestamp) {
   return false;
 };
 
+userSchema.methods.whetherPasswordChanged = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    //Default value of passwordChangedAt is undefined. If it is defined, that means password has been changed.
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp > changedTimestamp;
+  }
+  //False means not Changed
+  return false;
+};
+
 userSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
