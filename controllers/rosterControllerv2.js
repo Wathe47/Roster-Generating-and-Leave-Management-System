@@ -12,6 +12,7 @@ const { google } = require("googleapis");
 const { get } = require("http");
 const Day = require("../models/dayModel");
 const Roster = require("../models/rosterModel");
+const mongoose = require("mongoose");
 
 const calendar = google.calendar("v3");
 
@@ -84,7 +85,7 @@ async function getAllDaysInWeek(startDate) {
   return allDays;
 }
 
-// =========== ALGORITHM_FUNCTIONS ===========
+// =========== ALGORITHM_FUNCTIONS =========== //
 
 async function filterDayOffEmp(dateString) {
   const employees = await User.find({ active: true }).lean();
@@ -433,6 +434,33 @@ async function generateRosterForWeek(dateString) {
   return rosterArray;
 }
 
+async function generateWorkingDaysForUser(startDate, userString) {
+  const newMap = new Map();
+
+  const newDate = await Roster.findOne({ startDate });
+
+  const dateArray = newDate.days;
+
+  await Promise.all(
+    dateArray.map(async (day) => {
+      let dayv1 = day.toString();
+      const relevantDate = await Day.findById({ _id: dayv1 });
+
+      if (relevantDate.isHoliday) {
+        newMap.set(relevantDate.date, "Holiday");
+        return;
+      }
+
+      if (relevantDate.onSiteEmp.some((emp) => emp.toString() === userString)) {
+        newMap.set(relevantDate.date, "On Site");
+        console.log("On Site");
+      }
+    })
+  );
+
+  console.log(newMap);
+}
+
 exports.getWorkingDays = catchAsync(async (req, res, next) => {
   const startDate = new Date("2023-06-12");
 
@@ -460,13 +488,12 @@ exports.createRoster = catchAsync(async (req, res, next) => {
   date.setDate(date.getDate() + 4);
   const fridayOfWeek = date.toISOString().split("T")[0];
 
-  const period = `${mondayOfWeek} - ${fridayOfWeek}`;
-
   //GENERATE ROSTER FOR THE WEEK
   const roster = await generateRosterForWeek(mondayOfWeek);
 
   const weekRoster = await Roster.create({
-    period,
+    startDate: mondayOfWeek,
+    endDate: fridayOfWeek,
     days: roster,
     createdBy: currentEmp._id,
   });
@@ -497,84 +524,10 @@ exports.getRoster = catchAsync(async (req, res, next) => {
 });
 
 exports.testingFunctions = catchAsync(async (req, res, next) => {
-  // const [onSite, remote] = await assignEmployees("2023-06-12");
-  // console.log("ON-SITE EMPLOYEES");
-  // console.log(onSite);
-  // console.log("REMOTE EMPLOYEES");
-  // console.log(remote);
-
-  await generateRosterForADate("2023-06-12");
+  console.log("Working-route");
+  await generateWorkingDaysForUser("2023-06-12");
 
   res.status(200).json({
     status: "success",
   });
 });
-
-// async function getAvailableEmp(dateString) {
-//   const date = new Date(dateString);
-
-//   const jobTitle = [
-//     "SoftwareEngineer",
-//     "QualityAssuranceEngineer",
-//     "ProjectManager",
-//     "TechnicalWriter",
-//   ];
-
-//   let eligibleList = {
-//     date: date,
-//     eligibleEmployees: {},
-//   };
-
-//   jobTitle.forEach((title) => {
-//     eligibleList.eligibleEmployees[title] = [];
-//   });
-
-//   const leaves = await LeaveRequest.find({
-//     date: { $nin: date },
-//   });
-
-//   if (!leaves) {
-//     return next(new AppError("No leaves found with that ID", 404));
-//   }
-
-//   await Promise.all(
-//     leaves.map(async (leave) => {
-//       const eligibleEmp = await User.findById(leave.employee);
-
-//       if (eligibleEmp) {
-//         const role = eligibleEmp.jobTitle.split(" ").join("");
-
-//         eligibleList.eligibleEmployees[role].push(eligibleEmp._id.toString());
-//       }
-//     })
-//   );
-
-//   return eligibleList;
-// }
-
-// async function filterPregnantEmp(empList) {
-//   //FILTER PREGNANT EMPLOYEES OR EMPLOYEES WHO HAVE A CHILD UNDER 5 YEARS
-
-//   const remoteEmp = [];
-//   const employees = await User.find({
-//     $or: [{ isPregnant: true }, { hasChildBelow5: true }],
-//   });
-
-//   if (!employees) {
-//     return empList, remoteEmp;
-//   }
-
-//   employees.forEach((employee) => {
-//     empList = empList.map((emp) => {
-//       if (emp === employee._id.toString()) {
-//         remoteEmp.push(emp);
-//       }
-//     });
-//   });
-
-//   employees.forEach((employee) => {
-//     empList = empList.filter((emp) => emp !== employee._id.toString());
-//   });
-
-//   return empList, remoteEmp;
-// }

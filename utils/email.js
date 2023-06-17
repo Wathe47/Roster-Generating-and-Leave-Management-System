@@ -112,6 +112,31 @@ module.exports = class Email {
     await this.newTransport().sendMail(mailOptions);
   }
 
+  async sendRosterNotification(template, subject) {
+    const html = fs.readFileSync(
+      path.join(__dirname, `../views/email/${template}.html`),
+      "utf-8"
+    );
+
+    //EMAIL OPTIONS
+    const mailOptions = {
+      from: this.from,
+      to: this.to,
+      subject,
+      html: html
+        .replace(/{%receiverName%}/g, this.firstName)
+        .replace("{%role%}", this.toRole)
+        .replace("{%leaveDate%}", this.leaveDate)
+        .replace("{%leaveType%}", this.leaveType)
+        .replace(/{%firstName%}/g, this.receiverName)
+        .replace("{%jobTitle%}", this.role)
+        .replace("{%reason%}", this.reason),
+    };
+
+    //CREATE A TRANSPORT AND SEND EMAIL
+    await this.newTransport().sendMail(mailOptions);
+  }
+
   async sendTesting() {
     await this.send("Testing", "Testing-Email");
   }

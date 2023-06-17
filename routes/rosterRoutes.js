@@ -14,6 +14,8 @@ router.route("/").post(authController.protect, rosterController.createRoster);
 // @desc Get a roster by id
 // @access Private Login Required
 
+router.route("/testing-functions").get(rosterController.testingFunctions);
+
 router.route("/:id").get(authController.protect, rosterController.getRoster);
 
 router.route("/working-days").get(rosterController.getWorkingDays);
@@ -21,7 +23,5 @@ router.route("/working-days").get(rosterController.getWorkingDays);
 // @route GET api/rosters/testing-functions
 // @desc test the functions
 // @access Private (Admin Only)
-
-router.route("/testing-functions").get(rosterController.testingFunctions);
 
 module.exports = router; // Export the router

@@ -2,6 +2,12 @@ const mongoose = require("mongoose");
 
 const rosterSchema = new mongoose.Schema(
   {
+    startDate: {
+      type: String,
+    },
+    endDate: {
+      type: String,
+    },
     period: {
       type: String,
     },
@@ -23,15 +29,20 @@ const rosterSchema = new mongoose.Schema(
   }
 );
 
-rosterSchema.pre(/^find/, function (next) {
-  this.populate({
-    path: "days",
-    select: "-_id -createdAt -updatedAt -__v",
-  }).populate({
-    path: "createdBy",
-    select: "name jobTitle",
-  });
+// rosterSchema.pre(/^find/, function (next) {
+//   this.populate({
+//     path: "days",
+//     select: "-_id -createdAt -updatedAt -__v",
+//   }).populate({
+//     path: "createdBy",
+//     select: "name jobTitle",
+//   });
 
+//   next();
+// });
+
+rosterSchema.pre("save", function (next) {
+  this.period = `${this.startDate} - ${this.endDate}`;
   next();
 });
 

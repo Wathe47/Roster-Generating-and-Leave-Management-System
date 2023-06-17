@@ -78,6 +78,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 //?Implementing Protected Routes
 exports.protect = catchAsync(async (req, res, next) => {
+  console.log(req);
+
   // 1) Getting token and Check it is available
   let token;
   if (
@@ -219,4 +221,15 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // 4) Log user in, send JWT
   createSendToken(user, 200, res);
+});
+
+exports.logOut = catchAsync(async (req, res, next) => {
+  res.cookie("jwt", "loggedout", {
+    expires: new Date(Date.now() + 10 * 1000), //10 seconds
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    status: "success",
+  });
 });

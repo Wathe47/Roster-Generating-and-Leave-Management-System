@@ -109,6 +109,21 @@ userSchema.pre("save", function (next) {
   next();
 });
 
+userSchema.pre("save", function (next) {
+  if (this.distance === undefined || this.distance === null) {
+    return next();
+  }
+  if (this.distance < 10) {
+    this.distancePriority = 1;
+  } else if (this.distance < 20) {
+    this.distancePriority = 2;
+  } else {
+    this.distancePriority = 3;
+  }
+
+  next();
+});
+
 userSchema.pre(/^find/, function (next) {
   // ^find - find all the strings that start with find.
   // this points to the current query

@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import axios from "../../api/axios";
+import { checkToken } from "../../actions/authActions";
 
 class Leave extends React.Component {
   constructor(props) {
@@ -38,6 +40,21 @@ class Leave extends React.Component {
       [name]: value,
     });
   };
+
+  async getLeaveData() {
+    try {
+      const response = await axios.get("/api/leaves/mine");
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async componentDidMount() {
+    console.log(axios.defaults.headers.common["Authorization"]);
+    checkToken();
+    await this.getLeaveData();
+  }
 
   render() {
     return (
