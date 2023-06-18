@@ -1,10 +1,13 @@
 let Roster = require("../models/roster");
 
 exports.getRoster = (req, res) => {
-  Roster.find()
+  const { email } = req.query;
+
+  Roster.find({ email })
     .then((roster) => res.json(roster))
     .catch((err) => res.status(400).json("Error: " + err));
 };
+
 
 exports.getRosterById = (req, res) => {
   Roster.findById(req.params.id)
@@ -13,9 +16,7 @@ exports.getRosterById = (req, res) => {
 };
 
 exports.addRosterItem = (req, res) => {
-  const name = req.body.name;
-  const email = req.body.email;
-  const checkedIn = req.body.checkedIn;
+  const { name, email, checkedIn } = req.body;
 
   const newRoster = new Roster({
     name,
@@ -30,18 +31,22 @@ exports.addRosterItem = (req, res) => {
 };
 
 exports.updateRosterItem = (req, res) => {
-  Roster.findById(req.params.id)
-    .then((roster) => {
-      roster.name = req.body.name;
-      roster.email = req.body.email;
-      roster.checkedIn = req.body.checkedIn;
-      roster
-        .save()
-        .then(() => res.json("Roster item updated!"))
-        .catch((err) => res.status(400).json("Error: " + err));
-    })
+  const { id } = req.params;
+  const { checkedIn } = req.body;
+  const currentTime = new Date().toISOString();
+
+  Roster.findByIdAndUpdate(
+    id,
+    {
+      checkedIn,
+      checkOutTime: checkedIn ? currentTime : null,
+    },
+    { new: true }
+  )
+    .then(() => res.json("Roster item updated!"))
     .catch((err) => res.status(400).json("Error: " + err));
 };
+
 
 exports.deleteRosterItem = (req, res) => {
   Roster.findByIdAndDelete(req.params.id)

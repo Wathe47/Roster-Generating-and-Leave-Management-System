@@ -7,9 +7,10 @@ import {
 } from "./types";
 
 // Fetch all roster items
-export const fetchRoster = () => async (dispatch) => {
+export const fetchRoster = () => async (dispatch, getState) => {
   try {
-    const res = await axios.get("/api/roster");
+    const { email } = getState().auth.user; // Get the logged-in user's email
+    const res = await axios.get(`/api/roster?email=${email}`);
     dispatch({
       type: FETCH_ROSTER_SUCCESS,
       payload: res.data,
@@ -33,13 +34,18 @@ export const addRosterItem = (name, email, checkedIn) => async (dispatch) => {
 };
 
 // Update a roster item
+// Update a roster item
 export const updateRosterItem =
-  (id, name, email, checkedIn) => async (dispatch) => {
+  (id, name, email, checkedIn, checkInTime, checkOutTime) =>
+  async (dispatch) => {
     try {
       const res = await axios.put(`/api/roster/update/${id}`, {
+        id,
         name,
         email,
         checkedIn,
+        checkInTime,
+        checkOutTime,
       });
       dispatch({
         type: UPDATE_ROSTER_ITEM_SUCCESS,

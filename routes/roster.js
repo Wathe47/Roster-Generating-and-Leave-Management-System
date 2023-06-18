@@ -13,7 +13,7 @@ router.route("/:id").get(getRosterById);
 
 router.route("/").post(addRosterItem);
 
-router.route("/update/:id").post(updateRosterItem);
+router.route("/update/:id").put(updateRosterItem);
 
 router.route("/:id").delete(deleteRosterItem);
 

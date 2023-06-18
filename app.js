@@ -15,6 +15,7 @@ const globalErrorHandler = require("./controllers/errorController");
 const leaveRoutes = require("./routes/leaveRoutes");
 const userRoutes = require("./routes/userRoutes");
 const rosterRoutes = require("./routes/roster");
+const monthlyReportRoutes = require("./routes/monthlyReportRoutes");
 
 const app = express();
 // create an express app
@@ -87,6 +88,8 @@ app.use((req, res, next) => {
 app.use("/api/leaves", leaveRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/roster", rosterRoutes);
+app.use("/api/monthly-reports", monthlyReportRoutes);
+
 
 //Handling unhandled routes
 app.all("*", (req, res, next) => {

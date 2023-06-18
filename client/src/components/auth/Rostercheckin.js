@@ -10,8 +10,6 @@ import "./RosterCheckin.css";
 
 class Roster extends Component {
   state = {
-    name: "",
-    email: "",
     checkedIn: false,
     editingId: null,
   };
@@ -22,15 +20,10 @@ class Roster extends Component {
 
   handleAddRosterItem = (e) => {
     e.preventDefault();
-    this.props.addRosterItem(
-      this.state.name,
-      this.state.email,
-      this.state.checkedIn
-    );
+    const { name, email } = this.props.auth.user; // Get the logged-in user's name and email
+    this.props.addRosterItem(name, email, this.state.checkedIn);
     this.setState({
-      name: "",
-      email: "",
-      checkedIn: false,
+      checkedIn: true,
     });
   };
 
@@ -54,8 +47,25 @@ class Roster extends Component {
     this.props.deleteRosterItem(id);
   };
 
-  handleCheckInOut = (id, isCheckedIn) => {
-    this.props.updateRosterItem(id, null, null, !isCheckedIn);
+  handleCheckInOut = (
+    id,
+    name,
+    email,
+    checkInTime,
+    checkOutTime,
+    checkedIn
+  ) => {
+    const currentTime = new Date().toISOString();
+    const thisCheckOutTime = checkedIn ? currentTime : null;
+
+    this.props.updateRosterItem(
+      id,
+      name,
+      email,
+      checkedIn,
+      checkInTime,
+      thisCheckOutTime
+    );
   };
 
   handleEditRosterItem = (item) => {
@@ -84,22 +94,6 @@ class Roster extends Component {
           }
         >
           <label>
-            Name:
-            <input
-              type="text"
-              value={this.state.name}
-              onChange={(e) => this.setState({ name: e.target.value })}
-            />
-          </label>
-          <label>
-            Email:
-            <input
-              type="email"
-              value={this.state.email}
-              onChange={(e) => this.setState({ email: e.target.value })}
-            />
-          </label>
-          <label>
             Checked In:
             <input
               type="checkbox"
@@ -108,31 +102,69 @@ class Roster extends Component {
             />
           </label>
           <button type="submit">
-            {this.state.editingId ? "Update" : "Add"}
+            {this.state.editingId ? "Update" : "CHECK IN"}
           </button>
         </form>
 
-        <ul className="checkin--ul">
-          {roster?.map((item) => (
-            <li className="checkin--li" key={item._id}>
-              {item.name} {"  "} | {item.email} |{" "}
-              {item.checkedIn
-                ? `Checked In at ${item.checkInTime}`
-                : "Not Checked In"}
-              {/* <button className="check-in"
-                onClick={() => this.handleCheckInOut(item._id, item.checkedIn)}
-              >
-                {item.checkedIn ? "Check Out" : "Check In"}
-              </button>
-              <button className="edit" onClick={() => this.handleEditRosterItem(item)}>
-                Edit
-              </button>
-              <button className="delete" onClick={() => this.handleDeleteRosterItem(item._id)}>
-                Delete
-              </button> */}
-            </li>
-          ))}
-        </ul>
+        <table className="roster-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Check-in Time</th>
+              <th>Check-out Time</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {roster?.map((item) => (
+              <tr key={item._id}>
+                <td>{item.name}</td>
+                <td>{item.email}</td>
+                <td>
+                  {item.checkInTime
+                    ? new Date(item.checkInTime).toLocaleString()
+                    : "-"}
+                </td>
+                <td>
+                  {item.checkOutTime
+                    ? new Date(item.checkOutTime).toLocaleString()
+                    : "-"}
+                </td>
+                <td>
+                  {!item.checkOutTime ? (
+                    <>
+                      <button
+                        className="check-out"
+                        onClick={() =>
+                          this.handleCheckInOut(
+                            item._id,
+                            item.name,
+                            item.email,
+                            item.checkInTime,
+                            item.checkOutTime,
+                            item.checkedIn
+                          )
+                        }
+                      >
+                        Check Out
+                      </button>
+                      <button
+                        className="delete"
+                        onClick={() => this.handleDeleteRosterItem(item._id)}
+                      >
+                        Delete
+                      </button>
+                    </>
+                  ) : (
+                    <span>Checked Out</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
         <div className="checkin--devider"></div>
         {this.props.loading && <div>Loading...</div>}
         {this.props.error && <div>Error: {this.props.error}</div>}

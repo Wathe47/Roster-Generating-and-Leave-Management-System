@@ -1,0 +1,62 @@
+.monthly-report-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px;
+  }
+  
+  .report-heading {
+    font-size: 24px;
+    margin-bottom: 20px;
+    align-self: flex-start;
+  }
+  
+  .year-month-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 20px;
+    position: absolute;
+    left: 1496px;  
+}
+  
+  .year-box,
+  .month-box {
+    flex-basis: 10%;
+    border: 11px solid #ccc;
+    padding: 10px;
+    margin-left: 10px;
+  }
+  
+  .year-label,
+  .month-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .year-value,
+  .month-value {
+    font-size: 14px;
+  }
+  
+  .details-box {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+    width: 100%;
+  }
+  
+  .info-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+  }
+  
+  .info-label {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .info-value {
+    font-size: 14px;
+  }
+  
