@@ -6,8 +6,8 @@ import { withRouter } from "react-router-dom";
 import classNames from "classnames";
 import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
-
 import { motion } from "framer-motion";
+import validateRegistrationInput from "../../validation/register";
 
 class Registration extends Component {
   constructor() {
@@ -32,8 +32,10 @@ class Registration extends Component {
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
   };
+
   onSubmit = (e) => {
     e.preventDefault();
+
     const newUser = {
       name: this.state.name,
       email: this.state.email,
@@ -41,7 +43,13 @@ class Registration extends Component {
       passwordConfirm: this.state.passwordConfirm,
     };
 
-    this.props.registerUser(newUser, this.props.history);
+    const { errors, isValid } = validateRegistrationInput(newUser);
+
+    if (isValid) {
+      this.props.registerUser(newUser, this.props.history);
+    } else {
+      this.setState({ errors });
+    }
   };
 
   render() {
@@ -136,7 +144,7 @@ class Registration extends Component {
                 type="submit"
                 variant="outlined"
                 className="register--form--button"
-              > 
+              >
                 SUBMIT
               </Button>
             </div>

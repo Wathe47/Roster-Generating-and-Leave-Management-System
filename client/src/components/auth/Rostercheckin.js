@@ -1,3 +1,5 @@
+// Roster.js
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
@@ -7,11 +9,13 @@ import {
   deleteRosterItem,
 } from "../../actions/rosterActions";
 import "./RosterCheckin.css";
+import validateCheckIn from "../../validation/checkIn";
 
 class Roster extends Component {
   state = {
     checkedIn: false,
     editingId: null,
+    errors: {},
   };
 
   componentDidMount() {
@@ -21,10 +25,20 @@ class Roster extends Component {
   handleAddRosterItem = (e) => {
     e.preventDefault();
     const { name, email } = this.props.auth.user; // Get the logged-in user's name and email
-    this.props.addRosterItem(name, email, this.state.checkedIn);
-    this.setState({
-      checkedIn: true,
-    });
+
+    // Validate the check-in input
+    const { errors, isValid } = validateCheckIn(this.state);
+
+    if (isValid) {
+      this.props.addRosterItem(name, email, this.state.checkedIn);
+      this.setState({
+        checkedIn: true,
+        errors: {},
+      });
+    } else {
+      // If the form input is invalid, set the errors state
+      this.setState({ errors });
+    }
   };
 
   handleUpdateRosterItem = (e) => {
@@ -79,6 +93,7 @@ class Roster extends Component {
 
   render() {
     const { roster } = this.props;
+    const { errors } = this.state;
 
     return (
       <div className="checkin">
@@ -98,9 +113,14 @@ class Roster extends Component {
             <input
               type="checkbox"
               checked={this.state.checkedIn}
-              onChange={(e) => this.setState({ checkedIn: e.target.checked })}
+              onChange={(e) =>
+                this.setState({ checkedIn: e.target.checked, errors: {} })
+              }
             />
           </label>
+          {errors.checkedIn && (
+            <div className="error-message">{errors.checkedIn}</div>
+          )}
           <button type="submit">
             {this.state.editingId ? "Update" : "CHECK IN"}
           </button>
