@@ -55,6 +55,26 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.updateAdditionalDetails = catchAsync(async (req, res, next) => {
+  const { employee, distance, isPregnant, hasChildrenBelow5 } = req.body;
+
+  const emp = await User.findById(employee);
+
+  if (!emp) {
+    return next(new AppError("No Employee found in that ID", 404));
+  }
+
+  emp.distance = distance;
+  emp.isPregnant = isPregnant;
+  emp.hasChildrenBelow5 = hasChildrenBelow5;
+
+  await emp.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+
 exports.deleteMe = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user.id, { active: false });
 

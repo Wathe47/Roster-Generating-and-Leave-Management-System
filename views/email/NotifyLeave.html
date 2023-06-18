@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Leave Request Submitted</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #fef08a;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 40px 80px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      .container2 {
+        background-color: #e2e8f0;
+        padding: 10px 20px;
+        border-radius: 10px;
+      }
+      .container3 {
+        background-color: #d1d5db;
+        width: 75%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        border-radius: 20px;
+      }
+      h1 {
+        color: #333333;
+      }
+      p {
+        margin-bottom: 10px;
+        line-height: 1.5;
+      }
+      strong {
+        font-weight: bold;
+      }
+      .logo {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .logo img {
+        max-width: 200px;
+      }
+      .footer {
+        margin-top: 20px;
+        color: #999999;
+        font-size: 14px;
+      }
+      ul li {
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img
+          src="https://www.orangehrm.com/_resources/themes/orangehrm/dist/images/OrangeHRM_Logo.svg"
+          alt="Logo"
+        />
+      </div>
+
+      <h1>New Leave Request Submitted</h1>
+      <div class="container2">
+        <p>Dear {%receiverName%},</p>
+        <p>
+          A new leave request has been submitted. Please review the details
+          below:
+        </p>
+        <div class="container3">
+          <ul>
+            <li><strong>Employee Name:</strong> {%firstName%}</li>
+            <li><strong>Job Role:</strong> {%role%}</li>
+            <li><strong>Date:</strong> {%leaveDate%}</li>
+            <li><strong>Type:</strong> {%leaveType%}</li>
+          </ul>
+        </div>
+
+        <p>Thank you.</p>
+        <div class="footer">
+          <p>Best regards,</p>
+          <p>The Leave Management System</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

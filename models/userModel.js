@@ -109,6 +109,21 @@ userSchema.pre("save", function (next) {
   next();
 });
 
+userSchema.pre("save", function (next) {
+  if (this.distance === undefined || this.distance === null) {
+    return next();
+  }
+  if (this.distance < 10) {
+    this.distancePriority = 1;
+  } else if (this.distance < 20) {
+    this.distancePriority = 2;
+  } else {
+    this.distancePriority = 3;
+  }
+
+  next();
+});
+
 userSchema.pre(/^find/, function (next) {
   // ^find - find all the strings that start with find.
   // this points to the current query
@@ -136,6 +151,19 @@ userSchema.methods.changedPasswordafter = function (JWTTimestamp) {
       10
     );
     return JWTTimestamp < changedTimestamp;
+  }
+  //False means not Changed
+  return false;
+};
+
+userSchema.methods.whetherPasswordChanged = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    //Default value of passwordChangedAt is undefined. If it is defined, that means password has been changed.
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
+    return JWTTimestamp > changedTimestamp;
   }
   //False means not Changed
   return false;

@@ -14,7 +14,7 @@ const globalErrorHandler = require("./controllers/errorController");
 
 const leaveRoutes = require("./routes/leaveRoutes");
 const userRoutes = require("./routes/userRoutes");
-const rosterRoutes = require("./routes/rosterRoutes");
+const rosterRoutes = require("./routes/roster");
 
 const app = express();
 // create an express app
@@ -86,7 +86,7 @@ app.use((req, res, next) => {
 // 3) ROUTES
 app.use("/api/leaves", leaveRoutes);
 app.use("/api/users", userRoutes);
-app.use("/api/rosters", rosterRoutes);
+app.use("/api/roster", rosterRoutes);
 
 //Handling unhandled routes
 app.all("*", (req, res, next) => {

@@ -37,6 +37,9 @@ router.patch(
 router.patch("/updateMe", authController.protect, userController.updateMe);
 router.delete("/deleteMe", authController.protect, userController.deleteMe);
 
+// Routes for update additional Data
+router.patch("/update-additional", userController.updateAdditionalDetails);
+
 // Routes for user CRUD operations
 router
   .route("/")
