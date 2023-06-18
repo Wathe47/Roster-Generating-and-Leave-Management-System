@@ -61,15 +61,18 @@ export const logoutUser = () => (dispatch) => {
 export const checkToken = () => (dispatch) => {
   // Get token from local storage
   const token = localStorage.getItem("jwtToken");
+  console.log("Token:", token);
   // Check if token is present
   if (token) {
     // Set token to Auth header
     setAuthToken(token);
+    console.log("Token found");
     // decode token
     const decoded = jwt_decode(token);
     // Set current user
     dispatch(setCurrentUser(decoded));
   } else {
+    console.log("Token not found");
     // Remove auth header for future requests
     setAuthToken(false);
     // Set current user to {} which will also set isAuthenticated to false

@@ -37,8 +37,8 @@ router.patch(
 router.patch("/updateMe", authController.protect, userController.updateMe);
 router.delete("/deleteMe", authController.protect, userController.deleteMe);
 
-// Route for adding user to department (private, restricted to admin/department head)
-router.patch("/addToDepartment", userController.addToDepartment);
+// Routes for update additional Data
+router.patch("/update-additional", userController.updateAdditionalDetails);
 
 // Routes for user CRUD operations
 router

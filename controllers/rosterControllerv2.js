@@ -1,9 +1,18 @@
 const AppError = require("../utils/appError");
 const User = require("../models/userModel");
 const LeaveRequest = require("../models/leaveModel");
+const {
+  isAHoliday,
+  getNameOfDay,
+  isValidDate,
+} = require("../utils/holidayAPI");
 
 const catchAsync = require("../utils/catchAsync");
 const { google } = require("googleapis");
+const { get } = require("http");
+const Day = require("../models/dayModel");
+const Roster = require("../models/rosterModel");
+const mongoose = require("mongoose");
 
 const calendar = google.calendar("v3");
 
@@ -76,19 +85,21 @@ async function getAllDaysInWeek(startDate) {
   return allDays;
 }
 
-// =========== ALGORITHM_FUNCTIONS ===========
+// =========== ALGORITHM_FUNCTIONS =========== //
 
 async function filterDayOffEmp(dateString) {
   const employees = await User.find({ active: true }).lean();
   const empList = employees.map((employee) => employee._id.toString());
 
-  console.log(`Total Employees: ${empList.length}`);
+  // console.log(`CHECK01 ✅: TOTAL NO OF EMPLOYEES: ${empList.length} `);
 
   const leaves = await LeaveRequest.find({
-    date: { $in: dateString },
+    date: dateString,
   }).lean();
 
-  console.log(`Total Leaves: ${leaves.length} on ${dateString}`);
+  // console.log(
+  //   `CHECK02 ✅: TOTAL NO OF LEAVES: ${leaves.length} ON ${dateString} `
+  // );
 
   if (!leaves) {
     return empList;
@@ -100,7 +111,9 @@ async function filterDayOffEmp(dateString) {
     }
   });
 
-  console.log(`Total Available Employees: ${empList.length} on ${dateString}`);
+  // console.log(
+  //   `CHECK03 ✅: TOTAL NO OF EMPLOYEES AFTER LEAVE: ${empList.length} `
+  // );
 
   return empList;
 }
@@ -133,8 +146,13 @@ async function filterPregnantEmp(empList) {
   });
 
   if (!employees) {
+    // console.log(`CHECK04 ✅: TOTAL NO OF PREGNANT/CHILDREN BELOW 5: 0 `);
     return [empList, remoteEmp];
   }
+
+  // console.log(
+  //   `CHECK04 ✅: TOTAL NO OF PREGNANT/CHILDREN BELOW 5: ${employees.length} `
+  // );
 
   for (let i = 0; i < empList.length; i++) {
     const empId = empList[i];
@@ -146,7 +164,6 @@ async function filterPregnantEmp(empList) {
       }
     });
   }
-
   return [empList, remoteEmp];
 }
 
@@ -165,6 +182,8 @@ async function assignLeadingPerson(empMap) {
   } else if (Boolean(COO.length)) {
     onSite.push(COO[0]);
   }
+
+  // console.log(`CHECK05 ✅: LEADING PERSON ASSIGNED `);
 
   return [onSite, remote];
 }
@@ -191,6 +210,8 @@ async function assignAdministrativeEmp(empMap) {
     onSite.push(all[0]);
   }
 
+  // console.log(`CHECK06 ✅: ADMINISTRATIVE EMPLOYEES ASSIGNED `);
+
   return [onSite, remote];
 }
 
@@ -202,7 +223,6 @@ async function assignEngEmp(empMap) {
   const sdev = empMap.get("Senior Software Developer");
 
   const all = [...(qa ?? []), ...(sdev ?? [])];
-  console.log(all);
 
   all.sort(() => Math.random() - 0.5);
 
@@ -213,6 +233,8 @@ async function assignEngEmp(empMap) {
       remote.push(all[i]);
     }
   }
+
+  // console.log(`CHECK07 ✅: SENIOR DEV/QA ASSIGNED `);
 
   return [onSite, remote];
 }
@@ -231,6 +253,8 @@ async function assignSEEmp(empMap) {
   for (let i = 1; i < all.length; i++) {
     remote.push(all[i]);
   }
+
+  // console.log(`CHECK08 ✅: SE ASSIGNED `);
 
   return [onSite, remote];
 }
@@ -251,12 +275,16 @@ async function assignHelpDeskEmp(empMap) {
     remote.push(all[i]);
   }
 
+  // console.log(`CHECK09 ✅: HELP DESK ASSIGNED `);
+
   return [onSite, remote];
 }
 
 async function assignEmployees(date) {
   let onSiteEmp = [];
   let remoteEmp = [];
+
+  // console.log(`⚠️⚠️ ALGORITHM STARTED ⚠️⚠️`);
 
   //GET AVAILABLE EMPLOYEES FOR GIVEN DATE
   const avlEmpFilter1 = await filterDayOffEmp(date);
@@ -265,6 +293,10 @@ async function assignEmployees(date) {
   const [avlEmpFilter2, reEmp] = await filterPregnantEmp(avlEmpFilter1);
 
   remoteEmp = [...remoteEmp, ...reEmp];
+
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: NOT YET ASSIGNED 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
 
   //LIST EMPLOYEES WITH THEIR JOB TITLES
   const EmpMap = await createListWithRoles(avlEmpFilter2);
@@ -280,6 +312,10 @@ async function assignEmployees(date) {
     remoteEmp = [...remoteEmp, ...remoteLead];
   }
 
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: ${onSiteEmp.length} 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
+
   // 02) ADMINISTRATION AND MANAGEMENT RELATED (2 PERSONS)
   const [onSiteAdmin, remoteAdmin] = await assignAdministrativeEmp(EmpMap);
 
@@ -288,6 +324,10 @@ async function assignEmployees(date) {
   if (remoteAdmin.length) {
     remoteEmp = [...remoteEmp, ...remoteAdmin];
   }
+
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: ${onSiteEmp.length} 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
 
   // 03) SENIOR SOFTWARE ENGINEERS OR QUALITY ASSURANCE (1 PERSONS)
   const [onSiteEng, remoteEng] = await assignEngEmp(EmpMap);
@@ -298,6 +338,10 @@ async function assignEmployees(date) {
     remoteEmp = [...remoteEmp, ...remoteEng];
   }
 
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: ${onSiteEmp.length} 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
+
   // 04) SOFTWARE ENGINEERS (1 PERSON)
   const [onSiteSE, remoteSE] = await assignSEEmp(EmpMap);
 
@@ -307,6 +351,10 @@ async function assignEmployees(date) {
     remoteEmp = [...remoteEmp, ...remoteSE];
   }
 
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: ${onSiteEmp.length} 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
+
   // 05) HELP DESK (1 PERSON)
   const [onSiteHelpDesk, remoteHelpDesk] = await assignHelpDeskEmp(EmpMap);
 
@@ -315,6 +363,12 @@ async function assignEmployees(date) {
   if (remoteHelpDesk.length) {
     remoteEmp = [...remoteEmp, ...remoteHelpDesk];
   }
+
+  // console.log(
+  //   `STATUS:🔰ONSITE EMPLOYEES: ${onSiteEmp.length} 🔰REMOTE EMPLOYEES: ${remoteEmp.length}`
+  // );
+
+  return [onSiteEmp, remoteEmp];
 }
 
 async function generateRooster(startDate) {
@@ -341,6 +395,72 @@ async function generateRooster(startDate) {
   });
 }
 
+async function generateRosterForADate(dateString) {
+  const dateName = getNameOfDay(dateString);
+  const isHoliday = await isAHoliday(dateString);
+  let onSiteEmp = [];
+  let remoteEmp = [];
+
+  if (!isHoliday) {
+    const [onSite, remote] = await assignEmployees(dateString);
+    onSiteEmp = onSiteEmp.concat(onSite);
+    remoteEmp = remoteEmp.concat(remote);
+    //concat ensures that the original arrays are not modified when the arrays are passed to the object.
+  }
+
+  const result = await Day.create({
+    date: dateString,
+    dateName,
+    isHoliday,
+    onSiteEmp,
+    remoteEmp,
+  });
+
+  return result._id.toString();
+}
+
+async function generateRosterForWeek(dateString) {
+  const rosterArray = [];
+
+  const date = new Date(dateString);
+
+  for (let i = 0; i < 5; i++) {
+    const dateString = date.toISOString().split("T")[0];
+    const roster = await generateRosterForADate(dateString);
+    rosterArray.push(roster);
+    date.setDate(date.getDate() + 1);
+  }
+
+  return rosterArray;
+}
+
+async function generateWorkingDaysForUser(startDate, userString) {
+  const newMap = new Map();
+
+  const newDate = await Roster.findOne({ startDate });
+
+  const dateArray = newDate.days;
+
+  await Promise.all(
+    dateArray.map(async (day) => {
+      let dayv1 = day.toString();
+      const relevantDate = await Day.findById({ _id: dayv1 });
+
+      if (relevantDate.isHoliday) {
+        newMap.set(relevantDate.date, "Holiday");
+        return;
+      }
+
+      if (relevantDate.onSiteEmp.some((emp) => emp.toString() === userString)) {
+        newMap.set(relevantDate.date, "On Site");
+        console.log("On Site");
+      }
+    })
+  );
+
+  console.log(newMap);
+}
+
 exports.getWorkingDays = catchAsync(async (req, res, next) => {
   const startDate = new Date("2023-06-12");
 
@@ -354,78 +474,60 @@ exports.getWorkingDays = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.createRoster = catchAsync(async (req, res, next) => {
+  const currentEmp = req.user;
+  const { mondayOfWeek } = req.body;
+  //mondayOfWeek is a String in the format of YYYY-MM-DD
+
+  //CHECK WHETHER INPUT IS VALID OR NOT
+  if (!isValidDate(mondayOfWeek) || getNameOfDay(mondayOfWeek) !== "Monday") {
+    return next(new AppError("Invalid Input", 400));
+  }
+
+  const date = new Date(mondayOfWeek);
+  date.setDate(date.getDate() + 4);
+  const fridayOfWeek = date.toISOString().split("T")[0];
+
+  //GENERATE ROSTER FOR THE WEEK
+  const roster = await generateRosterForWeek(mondayOfWeek);
+
+  const weekRoster = await Roster.create({
+    startDate: mondayOfWeek,
+    endDate: fridayOfWeek,
+    days: roster,
+    createdBy: currentEmp._id,
+  });
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      weekRoster,
+    },
+  });
+});
+
+exports.getRoster = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const roster = await Roster.findById(id);
+
+  if (!roster) {
+    return next(new AppError("No roster found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      roster,
+    },
+  });
+});
+
 exports.testingFunctions = catchAsync(async (req, res, next) => {
-  const result = getAllDaysInWeek("2023-06-12");
+  console.log("Working-route");
+  await generateWorkingDaysForUser("2023-06-12");
+
   res.status(200).json({
     status: "success",
   });
 });
-
-// async function getAvailableEmp(dateString) {
-//   const date = new Date(dateString);
-
-//   const jobTitle = [
-//     "SoftwareEngineer",
-//     "QualityAssuranceEngineer",
-//     "ProjectManager",
-//     "TechnicalWriter",
-//   ];
-
-//   let eligibleList = {
-//     date: date,
-//     eligibleEmployees: {},
-//   };
-
-//   jobTitle.forEach((title) => {
-//     eligibleList.eligibleEmployees[title] = [];
-//   });
-
-//   const leaves = await LeaveRequest.find({
-//     date: { $nin: date },
-//   });
-
-//   if (!leaves) {
-//     return next(new AppError("No leaves found with that ID", 404));
-//   }
-
-//   await Promise.all(
-//     leaves.map(async (leave) => {
-//       const eligibleEmp = await User.findById(leave.employee);
-
-//       if (eligibleEmp) {
-//         const role = eligibleEmp.jobTitle.split(" ").join("");
-
-//         eligibleList.eligibleEmployees[role].push(eligibleEmp._id.toString());
-//       }
-//     })
-//   );
-
-//   return eligibleList;
-// }
-
-// async function filterPregnantEmp(empList) {
-//   //FILTER PREGNANT EMPLOYEES OR EMPLOYEES WHO HAVE A CHILD UNDER 5 YEARS
-
-//   const remoteEmp = [];
-//   const employees = await User.find({
-//     $or: [{ isPregnant: true }, { hasChildBelow5: true }],
-//   });
-
-//   if (!employees) {
-//     return empList, remoteEmp;
-//   }
-
-//   employees.forEach((employee) => {
-//     empList = empList.map((emp) => {
-//       if (emp === employee._id.toString()) {
-//         remoteEmp.push(emp);
-//       }
-//     });
-//   });
-
-//   employees.forEach((employee) => {
-//     empList = empList.filter((emp) => emp !== employee._id.toString());
-//   });
-
-//   return empList, remoteEmp;
-// }
