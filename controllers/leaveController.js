@@ -120,23 +120,33 @@ exports.getMyLeaves = catchAsync(async (req, res, next) => {
   const employee = req.user._id.toString();
 
   //GENERATE QUERY
-  const features = new APIFeatures(
-    LeaveRequest.find({ employee }),
-    req.query
-  ).filter();
+  // const features = new APIFeatures(
+  //   LeaveRequest.find({ employee }),
+  //   req.query
+  // ).filter();
 
-  const leaves = await features.query;
-  console.log(leaves);
+  // const leaves = await features.query;
+  // console.log(leaves);
 
-  if (!leaves.length) {
-    return next(new AppError("No leaves found with that ID", 404));
-  }
+  const pendingLeaves = await LeaveRequest.find({
+    employee: ObjectId(employee),
+    status: "pending",
+  });
+
+  const approvedLeaves = await LeaveRequest.find({
+    employee: ObjectId(employee),
+    status: "approved",
+  });
+
+  // if (!leaves.length) {
+  //   return next(new AppError("No leaves found with that ID", 404));
+  // }
 
   res.status(200).json({
     status: "success",
-    results: leaves.length,
     data: {
-      leave: leaves,
+      pendingLeaves,
+      approvedLeaves,
     },
   });
 });

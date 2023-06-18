@@ -9,8 +9,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import axios from "axios";
-import { checkToken } from "../../actions/authActions";
+import axios from "../../api/axios";
 import "./leave.css";
 
 // Component for rendering individual leave requests
@@ -20,7 +19,7 @@ const LeaveRequest = ({ date, type, reason }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className="leave-request"
+      className='leave-request'
     >
       <div>Date: {date}</div>
       <div>Type: {type}</div>
@@ -47,6 +46,22 @@ class Leave extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     console.log("Form submitted:", this.state);
+
+    const data = {
+      date: this.state.date,
+      type: this.state.type,
+      reason: this.state.reason,
+    };
+
+    axios
+      .post("/api/leaves", data)
+      .then((res) => {
+        console.log(res);
+        this.getLeaveData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   handleInputChange = (event) => {
@@ -73,6 +88,11 @@ class Leave extends React.Component {
 
   async getLeaveData() {
     try {
+      const response = await axios.get("/api/leaves/mine").catch((err) => {
+        console.log(err);
+      });
+      console.log(response.data.data.approvedLeaves);
+
       // Dummy data for pending requests
       const pendingRequestsData = [
         {
@@ -98,8 +118,8 @@ class Leave extends React.Component {
 
       // Assuming the API response contains separate arrays for pending and approved requests
       this.setState({
-        pendingRequests: pendingRequestsData,
-        approvedRequests: approvedRequestsData,
+        pendingRequests: response.data.data.pendingLeaves,
+        approvedRequests: response.data.data.approvedLeaves,
       });
     } catch (error) {
       console.error(error);
@@ -107,8 +127,6 @@ class Leave extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(axios.defaults.headers.common["Authorization"]);
-    checkToken();
     await this.getLeaveData();
   }
 
@@ -142,43 +160,43 @@ class Leave extends React.Component {
           LEAVE REQUEST FORM
         </h1>
 
-        <div className="leave">
+        <div className='leave'>
           <form onSubmit={this.handleSubmit}>
             <TextField
-              label="Date"
-              type="date"
-              variant="outlined"
-              name="date"
+              label='Date'
+              type='date'
+              variant='outlined'
+              name='date'
               value={date}
               onChange={this.handleInputChange}
               fullWidth
-              margin="normal"
+              margin='normal'
               InputLabelProps={{
                 shrink: true,
               }}
             />
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="type-select-label">Type</InputLabel>
+            <FormControl fullWidth margin='normal'>
+              <InputLabel id='type-select-label'>Type</InputLabel>
               <Select
-                labelId="type-select-label"
-                id="type-select"
-                name="type"
+                labelId='type-select-label'
+                id='type-select'
+                name='type'
                 value={type}
                 onChange={this.handleInputChange}
               >
-                <MenuItem value="vacation">Vacation</MenuItem>
-                <MenuItem value="sick">Sick</MenuItem>
-                <MenuItem value="personal">Personal</MenuItem>
+                <MenuItem value='vacation'>Vacation</MenuItem>
+                <MenuItem value='sick'>Sick</MenuItem>
+                <MenuItem value='personal'>Personal</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label="Reason"
-              variant="outlined"
-              name="reason"
+              label='Reason'
+              variant='outlined'
+              name='reason'
               value={reason}
               onChange={this.handleInputChange}
               fullWidth
-              margin="normal"
+              margin='normal'
             />
           </form>
         </div>
@@ -192,19 +210,19 @@ class Leave extends React.Component {
           }}
         >
           <Button
-            type="submit"
-            variant="contained"
-            color="success"
+            type='submit'
+            variant='contained'
+            color='success'
             style={{ marginRight: "10px" }}
           >
             Request
           </Button>
-          <Link to="/dashboard" className="leave-close-button">
-            <Button variant="outlined">Close</Button>
+          <Link to='/dashboard' className='leave-close-button'>
+            <Button variant='outlined'>Close</Button>
           </Link>
         </div>
 
-        <div className="leave-requests">
+        <div className='leave-requests'>
           <h2>
             <Button onClick={this.togglePendingRequests}>
               Pending Requests
@@ -215,7 +233,7 @@ class Leave extends React.Component {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="leave-requests-table"
+              className='leave-requests-table'
             >
               {pendingRequests.length > 0 ? (
                 pendingRequests.map((request, index) => (
@@ -233,9 +251,9 @@ class Leave extends React.Component {
           )}
         </div>
 
-        <div className="divider"></div>
+        <div className='divider'></div>
 
-        <div className="leave-requests">
+        <div className='leave-requests'>
           <h2>
             <Button onClick={this.toggleApprovedRequests}>
               Approved Requests
@@ -246,7 +264,7 @@ class Leave extends React.Component {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className="leave-requests-table"
+              className='leave-requests-table'
             >
               {approvedRequests.length > 0 ? (
                 approvedRequests.map((request, index) => (

@@ -61,7 +61,6 @@ export const logoutUser = () => (dispatch) => {
 export const checkToken = () => (dispatch) => {
   // Get token from local storage
   const token = localStorage.getItem("jwtToken");
-  console.log("Token:", token);
   // Check if token is present
   if (token) {
     // Set token to Auth header
