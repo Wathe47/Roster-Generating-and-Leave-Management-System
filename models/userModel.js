@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema(
     empID: {
       type: String,
       unique: true,
-      default: 14,
+      default: 2000,
       //required: [true, `Enter Employee's ID !!`],
     },
     photo: String,
