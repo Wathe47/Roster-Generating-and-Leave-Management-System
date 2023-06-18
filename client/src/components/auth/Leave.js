@@ -9,20 +9,38 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import axios from "../../api/axios";
+import axios from "axios";
 import { checkToken } from "../../actions/authActions";
+import "./leave.css";
+
+// Component for rendering individual leave requests
+const LeaveRequest = ({ date, type, reason }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="leave-request"
+    >
+      <div>Date: {date}</div>
+      <div>Type: {type}</div>
+      <div>Reason: {reason}</div>
+    </motion.div>
+  );
+};
 
 class Leave extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: "",
-      startDate: "",
-      endDate: "",
-      duration: "",
-      priority: "",
-      comments: "",
+      date: "",
+      type: "",
+      reason: "",
+      pendingRequests: [],
+      approvedRequests: [],
+      showPendingRequests: false,
+      showApprovedRequests: false,
     };
   }
 
@@ -41,10 +59,48 @@ class Leave extends React.Component {
     });
   };
 
+  togglePendingRequests = () => {
+    this.setState((prevState) => ({
+      showPendingRequests: !prevState.showPendingRequests,
+    }));
+  };
+
+  toggleApprovedRequests = () => {
+    this.setState((prevState) => ({
+      showApprovedRequests: !prevState.showApprovedRequests,
+    }));
+  };
+
   async getLeaveData() {
     try {
-      const response = await axios.get("/api/leaves/mine");
-      console.log(response.data);
+      // Dummy data for pending requests
+      const pendingRequestsData = [
+        {
+          date: "2023-06-01",
+          type: "vacation",
+          reason: "Family vacation",
+        },
+        {
+          date: "2023-06-05",
+          type: "sick",
+          reason: "Fever",
+        },
+      ];
+
+      // Dummy data for approved requests
+      const approvedRequestsData = [
+        {
+          date: "2023-06-10",
+          type: "vacation",
+          reason: "Holiday trip",
+        },
+      ];
+
+      // Assuming the API response contains separate arrays for pending and approved requests
+      this.setState({
+        pendingRequests: pendingRequestsData,
+        approvedRequests: approvedRequestsData,
+      });
     } catch (error) {
       console.error(error);
     }
@@ -57,6 +113,16 @@ class Leave extends React.Component {
   }
 
   render() {
+    const {
+      date,
+      type,
+      reason,
+      pendingRequests,
+      approvedRequests,
+      showPendingRequests,
+      showApprovedRequests,
+    } = this.state;
+
     return (
       <motion.div
         initial={{ opacity: 0, y: "1%" }}
@@ -69,7 +135,7 @@ class Leave extends React.Component {
           style={{
             marginLeft: "20%",
             fontSize: "30px",
-            fontfamily: "Roboto",
+            fontFamily: "Roboto",
             color: "rgb(89, 88, 88)",
           }}
         >
@@ -79,33 +145,11 @@ class Leave extends React.Component {
         <div className="leave">
           <form onSubmit={this.handleSubmit}>
             <TextField
-              label="Name"
-              variant="outlined"
-              name="name"
-              value={this.state.name}
-              onChange={this.handleInputChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              label="Start Date"
+              label="Date"
               type="date"
               variant="outlined"
-              name="startDate"
-              value={this.state.startDate}
-              onChange={this.handleInputChange}
-              fullWidth
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <TextField
-              label="End Date"
-              type="date"
-              variant="outlined"
-              name="endDate"
-              value={this.state.endDate}
+              name="date"
+              value={date}
               onChange={this.handleInputChange}
               fullWidth
               margin="normal"
@@ -114,42 +158,31 @@ class Leave extends React.Component {
               }}
             />
             <FormControl fullWidth margin="normal">
-              <InputLabel id="duration-select-label">Duration</InputLabel>
+              <InputLabel id="type-select-label">Type</InputLabel>
               <Select
-                labelId="duration-select-label"
-                id="duration-select"
-                name="duration"
-                value={this.state.duration}
+                labelId="type-select-label"
+                id="type-select"
+                name="type"
+                value={type}
                 onChange={this.handleInputChange}
               >
-                <MenuItem value="half-day">Half Day</MenuItem>
-                <MenuItem value="full-day">Full Day</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="priority-select-label">Priority</InputLabel>
-              <Select
-                labelId="priority-select-label"
-                id="priority-select"
-                name="priority"
-                value={this.state.priority}
-                onChange={this.handleInputChange}
-              >
-                <MenuItem value="critical">Critical</MenuItem>
-                <MenuItem value="medium">Medium</MenuItem>
+                <MenuItem value="vacation">Vacation</MenuItem>
+                <MenuItem value="sick">Sick</MenuItem>
+                <MenuItem value="personal">Personal</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label="Comments"
+              label="Reason"
               variant="outlined"
-              name="comments"
-              value={this.state.comments}
+              name="reason"
+              value={reason}
               onChange={this.handleInputChange}
               fullWidth
               margin="normal"
             />
           </form>
         </div>
+
         <div
           style={{
             display: "flex",
@@ -166,27 +199,69 @@ class Leave extends React.Component {
           >
             Request
           </Button>
-          <Link to="/dashboard" className="leaveclosebutton">
+          <Link to="/dashboard" className="leave-close-button">
             <Button variant="outlined">Close</Button>
           </Link>
         </div>
 
-        <div className="leave">
-          <form>
-            <TextField
-              label="Pending Requests"
-              variant="outlined"
-              value={10}
-              margin="normal"
-              style={{ marginRight: "1rem" }}
-            />
-            <TextField
-              label="Approved Requests"
-              variant="outlined"
-              value={5}
-              margin="normal"
-            />
-          </form>
+        <div className="leave-requests">
+          <h2>
+            <Button onClick={this.togglePendingRequests}>
+              Pending Requests
+            </Button>
+          </h2>
+          {showPendingRequests && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="leave-requests-table"
+            >
+              {pendingRequests.length > 0 ? (
+                pendingRequests.map((request, index) => (
+                  <LeaveRequest
+                    key={index}
+                    date={request.date}
+                    type={request.type}
+                    reason={request.reason}
+                  />
+                ))
+              ) : (
+                <p>No pending requests</p>
+              )}
+            </motion.div>
+          )}
+        </div>
+
+        <div className="divider"></div>
+
+        <div className="leave-requests">
+          <h2>
+            <Button onClick={this.toggleApprovedRequests}>
+              Approved Requests
+            </Button>
+          </h2>
+          {showApprovedRequests && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="leave-requests-table"
+            >
+              {approvedRequests.length > 0 ? (
+                approvedRequests.map((request, index) => (
+                  <LeaveRequest
+                    key={index}
+                    date={request.date}
+                    type={request.type}
+                    reason={request.reason}
+                  />
+                ))
+              ) : (
+                <p>No approved requests</p>
+              )}
+            </motion.div>
+          )}
         </div>
       </motion.div>
     );
