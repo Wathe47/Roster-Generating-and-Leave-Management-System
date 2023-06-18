@@ -19,7 +19,7 @@ const LeaveRequest = ({ date, type, reason }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
-      className='leave-request'
+      className="leave-request"
     >
       <div>Date: {date}</div>
       <div>Type: {type}</div>
@@ -94,27 +94,27 @@ class Leave extends React.Component {
       console.log(response.data.data.approvedLeaves);
 
       // Dummy data for pending requests
-      const pendingRequestsData = [
-        {
-          date: "2023-06-01",
-          type: "vacation",
-          reason: "Family vacation",
-        },
-        {
-          date: "2023-06-05",
-          type: "sick",
-          reason: "Fever",
-        },
-      ];
+      // const pendingRequestsData = [
+      //   {
+      //     date: "2023-06-01",
+      //     type: "vacation",
+      //     reason: "Family vacation",
+      //   },
+      //   {
+      //     date: "2023-06-05",
+      //     type: "sick",
+      //     reason: "Fever",
+      //   },
+      // ];
 
-      // Dummy data for approved requests
-      const approvedRequestsData = [
-        {
-          date: "2023-06-10",
-          type: "vacation",
-          reason: "Holiday trip",
-        },
-      ];
+      // // Dummy data for approved requests
+      // const approvedRequestsData = [
+      //   {
+      //     date: "2023-06-10",
+      //     type: "vacation",
+      //     reason: "Holiday trip",
+      //   },
+      // ];
 
       // Assuming the API response contains separate arrays for pending and approved requests
       this.setState({
@@ -160,43 +160,43 @@ class Leave extends React.Component {
           LEAVE REQUEST FORM
         </h1>
 
-        <div className='leave'>
+        <div className="leave">
           <form onSubmit={this.handleSubmit}>
             <TextField
-              label='Date'
-              type='date'
-              variant='outlined'
-              name='date'
+              label="Date"
+              type="date"
+              variant="outlined"
+              name="date"
               value={date}
               onChange={this.handleInputChange}
               fullWidth
-              margin='normal'
+              margin="normal"
               InputLabelProps={{
                 shrink: true,
               }}
             />
-            <FormControl fullWidth margin='normal'>
-              <InputLabel id='type-select-label'>Type</InputLabel>
+            <FormControl fullWidth margin="normal">
+              <InputLabel id="type-select-label">Type</InputLabel>
               <Select
-                labelId='type-select-label'
-                id='type-select'
-                name='type'
+                labelId="type-select-label"
+                id="type-select"
+                name="type"
                 value={type}
                 onChange={this.handleInputChange}
               >
-                <MenuItem value='vacation'>Vacation</MenuItem>
-                <MenuItem value='sick'>Sick</MenuItem>
-                <MenuItem value='personal'>Personal</MenuItem>
+                <MenuItem value="vacation">Vacation</MenuItem>
+                <MenuItem value="sick">Sick</MenuItem>
+                <MenuItem value="personal">Personal</MenuItem>
               </Select>
             </FormControl>
             <TextField
-              label='Reason'
-              variant='outlined'
-              name='reason'
+              label="Reason"
+              variant="outlined"
+              name="reason"
               value={reason}
               onChange={this.handleInputChange}
               fullWidth
-              margin='normal'
+              margin="normal"
             />
           </form>
         </div>
@@ -210,19 +210,19 @@ class Leave extends React.Component {
           }}
         >
           <Button
-            type='submit'
-            variant='contained'
-            color='success'
+            type="submit"
+            variant="contained"
+            color="success"
             style={{ marginRight: "10px" }}
           >
             Request
           </Button>
-          <Link to='/dashboard' className='leave-close-button'>
-            <Button variant='outlined'>Close</Button>
+          <Link to="/dashboard" className="leave-close-button">
+            <Button variant="outlined">Close</Button>
           </Link>
         </div>
 
-        <div className='leave-requests'>
+        <div className="leave-requests">
           <h2>
             <Button onClick={this.togglePendingRequests}>
               Pending Requests
@@ -233,7 +233,7 @@ class Leave extends React.Component {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className='leave-requests-table'
+              className="leave-requests-table"
             >
               {pendingRequests.length > 0 ? (
                 pendingRequests.map((request, index) => (
@@ -251,9 +251,9 @@ class Leave extends React.Component {
           )}
         </div>
 
-        <div className='divider'></div>
+        <div className="divider"></div>
 
-        <div className='leave-requests'>
+        <div className="leave-requests">
           <h2>
             <Button onClick={this.toggleApprovedRequests}>
               Approved Requests
@@ -264,7 +264,7 @@ class Leave extends React.Component {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
-              className='leave-requests-table'
+              className="leave-requests-table"
             >
               {approvedRequests.length > 0 ? (
                 approvedRequests.map((request, index) => (

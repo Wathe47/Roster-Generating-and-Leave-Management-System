@@ -32,9 +32,9 @@ class NavbarDashboard extends Component {
             LEAVE
           </Link>
         </li>
-        <li onClick={this.handleLogout} className="nav-link">
+        {/* <li onClick={this.handleLogout} className="nav-link">
           LOGOUT
-        </li>
+        </li> */}
       </>
     );
 

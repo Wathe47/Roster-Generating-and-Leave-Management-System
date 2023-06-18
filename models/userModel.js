@@ -19,14 +19,14 @@ const userSchema = new mongoose.Schema(
     empID: {
       type: String,
       unique: true,
-      default: 2000,
+      default: 404,
       //required: [true, `Enter Employee's ID !!`],
     },
     photo: String,
     jobTitle: {
       type: String,
       //required: [true, `Enter Employee's job title !!`],
-      default: "Junior Software Engineer",
+      default: "admin",
     },
     leavesTaken: [
       {

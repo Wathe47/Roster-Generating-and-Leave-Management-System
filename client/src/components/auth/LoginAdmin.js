@@ -12,7 +12,7 @@ class Login extends Component {
   constructor() {
     super();
     this.state = {
-      email: "",
+      email: "admin1@gmail.com",
       password: "",
       errors: {},
     };
@@ -22,22 +22,16 @@ class Login extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.auth.isAuthenticated) {
-      this.props.history.push("/dashboard");
+      this.props.history.push("/adminDashboard");
     }
 
     if (nextProps.errors) {
       this.setState({ errors: nextProps.errors });
     }
 
-    // // Check if authentication failed due to invalid credentials
-    // if (nextProps.errors && nextProps.errors.invalidCredentials) {
-    //   // Set authentication to false
-    //   this.props.logoutUser();
-    // }
-
     // Check if authentication failed due to invalid credentials
     if (nextProps.errors && nextProps.errors.status === "fail") {
-      const error = nextProps.errors.message || "Incorrect email or password";
+      const error = nextProps.errors.message || "Incorrect password";
       this.setState({ errors: { password: error } });
     }
   }
@@ -112,12 +106,12 @@ class Login extends Component {
           <div className="login-right--align2">
             <div className="login-right--align">
               <div className="login--content2">
-                <p className="login--p">LOG IN</p>
+                <p className="login--p">ADMIN LOG IN</p>
 
                 <form onSubmit={this.onSubmit}>
                   <div className="login--buttons">
                     <div className="login--input">
-                      <TextField
+                      <TextField disabled
                         id="outlined-basic1"
                         label="UserName"
                         variant="outlined"
@@ -125,7 +119,7 @@ class Login extends Component {
                           "is-invalid": errors.name,
                         })}
                         size="small"
-                        value={this.state.email}
+                        value="ADMIN"
                         onChange={this.onChange}
                         color="primary"
                         name="email"

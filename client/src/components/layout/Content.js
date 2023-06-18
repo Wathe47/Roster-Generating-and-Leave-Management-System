@@ -37,6 +37,11 @@ class Content extends Component {
                   <button className="button--si">LOG IN</button>
                 </Link>
               </div>
+              <div className="gets--buttons">
+                <Link className="nav-link" to="/adminLogin">
+                  <button className="button--admin">ADMIN</button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>

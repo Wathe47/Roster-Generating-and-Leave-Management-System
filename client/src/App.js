@@ -17,8 +17,7 @@ import Dashboard from "./components/auth/Dashboard";
 import Leave from "./components/auth/Leave";
 import NavbarDashboard from "./components/layout/NavbarDashboard";
 import Roster from "./components/auth/Roster";
-import Rostercheckin from "./components/auth/Rostercheckin"
-
+import Rostercheckin from "./components/auth/Rostercheckin";
 
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
@@ -26,6 +25,8 @@ import { setCurrentUser } from "./actions/authActions";
 import RosterCreate from "./components/auth/RosterCreate";
 import Emproster from "./components/auth/EMP_Roster";
 import MonthlyReport from "./components/auth/MonthlyReport";
+import AdminLogin from "./components/auth/LoginAdmin";
+import AdminDashboard from "./components/auth/DashboardAdmin";
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -73,6 +74,16 @@ class App extends Component {
                     path="/login"
                     render={(props) => <Login mode={mode} {...props} />}
                   ></Route>
+                  <Route
+                    exact
+                    path="/adminLogin"
+                    render={(props) => <Navbar mode={mode} {...props} />}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/adminLogin"
+                    render={(props) => <AdminLogin mode={mode} {...props} />}
+                  ></Route>
 
                   <Route
                     exact
@@ -119,6 +130,21 @@ class App extends Component {
                     exact
                     path="/dashboard"
                     render={(props) => <Dashboard mode={mode} {...props} />}
+                  ></Route>
+
+                  <Route
+                    exact
+                    path="/adminDashboard"
+                    render={(props) => (
+                      <NavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/adminDashboard"
+                    render={(props) => (
+                      <AdminDashboard mode={mode} {...props} />
+                    )}
                   ></Route>
                   <Route
                     exact
@@ -186,7 +212,7 @@ class App extends Component {
                     render={(props) => <Rostercheckin mode={mode} {...props} />}
                   ></Route>
 
-<Route
+                  <Route
                     exact
                     path="/monthlyreport"
                     render={(props) => (

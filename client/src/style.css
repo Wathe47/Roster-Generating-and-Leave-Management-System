@@ -221,6 +221,12 @@ button {
 .button--si {
   background-color: #f58321;
 }
+.button--admin {
+  background-color: #6e6e6e;
+  width: 100%;
+  font-size: 10px;
+  text-align: center;
+}
 
 .light .login-content--background {
   position: absolute;
