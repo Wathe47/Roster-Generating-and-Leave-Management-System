@@ -47,7 +47,7 @@ class Dashboard extends Component {
 
   render() {
     const { auth } = this.props;
-    const { filePreview, redirect } = this.state;
+    const { redirect } = this.state;
 
     if (redirect) {
       return <Redirect to="/adminLogin" />;
@@ -71,18 +71,6 @@ class Dashboard extends Component {
         </div>
         <div className="dashboard__content">
           <div className="dashboard__profileSection">
-            <img
-              src={filePreview || auth.user.avatar}
-              alt="Profile"
-              className="dashboard__profilePhoto"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={this.handleProfilePictureChange}
-            />
-            <button onClick={this.handleProfilePictureSubmit}>Update</button>
-
             <div className="dashboard__profileInfo">
               <h2 className="dashboard__greeting">
                 Hi, {auth.user.name.split(" ")[0]}!
@@ -122,7 +110,7 @@ class Dashboard extends Component {
             <Link to="/roster">
               <button className="dashboard__actionButton">View Roster</button>
             </Link> */}
-            <Link to="/leave" style={{ textDecoration: "none" }}>
+            <Link to="/adminLeave" style={{ textDecoration: "none" }}>
               <Card sx={{ maxWidth: 345 }}>
                 <CardActionArea>
                   <CardMedia
@@ -133,10 +121,10 @@ class Dashboard extends Component {
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h7" component="div">
-                      LEAVE
+                      LEAVE MANAGE
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                      Request Leave.
+                      Manage Leaves.
                     </Typography>
                   </CardContent>
                 </CardActionArea>

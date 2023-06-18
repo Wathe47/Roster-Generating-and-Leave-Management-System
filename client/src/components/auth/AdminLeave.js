@@ -1,19 +1,11 @@
 import React from "react";
-import {
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { Button } from "@mui/material";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
 import axios from "axios";
 import "./leave.css";
 
 // Component for rendering individual leave requests
-const LeaveRequest = ({ date, type, reason }) => {
+const LeaveRequest = ({ date, type, reason, onApprove, onReject }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -24,6 +16,10 @@ const LeaveRequest = ({ date, type, reason }) => {
       <div>Date: {date}</div>
       <div>Type: {type}</div>
       <div>Reason: {reason}</div>
+      <div>
+        <Button onClick={onApprove}>Approve</Button>
+        <Button onClick={onReject}>Reject</Button>
+      </div>
     </motion.div>
   );
 };
@@ -88,38 +84,32 @@ class Leave extends React.Component {
 
   async getLeaveData() {
     try {
-      const response = await axios.get("/api/leaves/mine").catch((err) => {
-        console.log(err);
-      });
-      console.log(response.data.data.approvedLeaves);
-
       // Dummy data for pending requests
-      // const pendingRequestsData = [
-      //   {
-      //     date: "2023-06-01",
-      //     type: "vacation",
-      //     reason: "Family vacation",
-      //   },
-      //   {
-      //     date: "2023-06-05",
-      //     type: "sick",
-      //     reason: "Fever",
-      //   },
-      // ];
+      const pendingRequestsData = [
+        {
+          date: "2023-06-01",
+          type: "vacation",
+          reason: "Family vacation",
+        },
+        {
+          date: "2023-06-05",
+          type: "sick",
+          reason: "Fever",
+        },
+      ];
 
-      // // Dummy data for approved requests
-      // const approvedRequestsData = [
-      //   {
-      //     date: "2023-06-10",
-      //     type: "vacation",
-      //     reason: "Holiday trip",
-      //   },
-      // ];
+      // Dummy data for approved requests
+      const approvedRequestsData = [
+        {
+          date: "2023-06-10",
+          type: "vacation",
+          reason: "Holiday trip",
+        },
+      ];
 
-      // Assuming the API response contains separate arrays for pending and approved requests
       this.setState({
-        pendingRequests: response.data.data.pendingLeaves,
-        approvedRequests: response.data.data.approvedLeaves,
+        pendingRequests: pendingRequestsData,
+        approvedRequests: approvedRequestsData,
       });
     } catch (error) {
       console.error(error);
@@ -130,11 +120,31 @@ class Leave extends React.Component {
     await this.getLeaveData();
   }
 
+  handleApproveRequest = (index) => {
+    const { pendingRequests, approvedRequests } = this.state;
+    const approvedRequest = pendingRequests[index];
+    const newPendingRequests = [...pendingRequests];
+    newPendingRequests.splice(index, 1);
+    const newApprovedRequests = [...approvedRequests, approvedRequest];
+
+    this.setState({
+      pendingRequests: newPendingRequests,
+      approvedRequests: newApprovedRequests,
+    });
+  };
+
+  handleRejectRequest = (index) => {
+    const { pendingRequests } = this.state;
+    const newPendingRequests = [...pendingRequests];
+    newPendingRequests.splice(index, 1);
+
+    this.setState({
+      pendingRequests: newPendingRequests,
+    });
+  };
+
   render() {
     const {
-      date,
-      type,
-      reason,
       pendingRequests,
       approvedRequests,
       showPendingRequests,
@@ -157,70 +167,8 @@ class Leave extends React.Component {
             color: "rgb(89, 88, 88)",
           }}
         >
-          LEAVE REQUEST FORM
+          LEAVE MANAGEMENT
         </h1>
-
-        <div className="leave">
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              label="Date"
-              type="date"
-              variant="outlined"
-              name="date"
-              value={date}
-              onChange={this.handleInputChange}
-              fullWidth
-              margin="normal"
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-            <FormControl fullWidth margin="normal">
-              <InputLabel id="type-select-label">Type</InputLabel>
-              <Select
-                labelId="type-select-label"
-                id="type-select"
-                name="type"
-                value={type}
-                onChange={this.handleInputChange}
-              >
-                <MenuItem value="vacation">Vacation</MenuItem>
-                <MenuItem value="sick">Sick</MenuItem>
-                <MenuItem value="personal">Personal</MenuItem>
-              </Select>
-            </FormControl>
-            <TextField
-              label="Reason"
-              variant="outlined"
-              name="reason"
-              value={reason}
-              onChange={this.handleInputChange}
-              fullWidth
-              margin="normal"
-            />
-          </form>
-        </div>
-
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            marginTop: "1rem",
-            marginRight: "20%",
-          }}
-        >
-          <Button
-            type="submit"
-            variant="contained"
-            color="success"
-            style={{ marginRight: "10px" }}
-          >
-            Request
-          </Button>
-          <Link to="/dashboard" className="leave-close-button">
-            <Button variant="outlined">Close</Button>
-          </Link>
-        </div>
 
         <div className="leave-requests">
           <h2>
@@ -242,6 +190,8 @@ class Leave extends React.Component {
                     date={request.date}
                     type={request.type}
                     reason={request.reason}
+                    onApprove={() => this.handleApproveRequest(index)}
+                    onReject={() => this.handleRejectRequest(index)}
                   />
                 ))
               ) : (

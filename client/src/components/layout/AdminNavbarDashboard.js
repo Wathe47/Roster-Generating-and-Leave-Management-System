@@ -18,7 +18,7 @@ class NavbarDashboard extends Component {
     const authLinks = (
       <>
         <li>
-          <Link className="nav-link" to="/dashboard">
+          <Link className="nav-link" to="/adminDashboard">
             DASHBOARD
           </Link>
         </li>
@@ -28,7 +28,7 @@ class NavbarDashboard extends Component {
           </Link>
         </li>
         <li>
-          <Link className="nav-link" to="/leave">
+          <Link className="nav-link" to="/adminLeave">
             LEAVE
           </Link>
         </li>
