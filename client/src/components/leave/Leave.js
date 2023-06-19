@@ -70,6 +70,7 @@ class Leave extends React.Component {
           progress: undefined,
           theme: "light",
         });
+
         await this.getLeaveData();
         this.setState({
           date: "",
@@ -78,7 +79,8 @@ class Leave extends React.Component {
         });
       }
     } catch (error) {
-      toast.error("An error occurred. Please try again later.", {
+      console.error(error);
+      toast.error(error.response.data.message, {
         position: "top-center",
         autoClose: 5000,
         hideProgressBar: false,

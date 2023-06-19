@@ -21,19 +21,34 @@ router.route("/").post(authController.protect, leaveController.createLeave);
 // @access Private (Login Users)
 router.route("/mine").get(authController.protect, leaveController.getMyLeaves);
 
-// @route PUT api/leaves/approve
-// @desc Approve/Reject Leave
+// @route PUT api/leaves/approve/:id
+// @desc Approve leave
 // @access Private (Admin Only)
 router
-  .route("/approve")
-  .put(
+  .route("/approve/:id")
+  .patch(
     authController.protect,
     authController.restrictTo(
       "Chief Executive Officer",
       "Chief Operating Officer",
       "Human Resources/Administrative"
     ),
-    leaveController.approveLeave
+    leaveController.approveLeaveNew
+  );
+
+// @route PUT api/leaves/reject/:id
+// @desc Reject leave
+// @access Private (Admin Only)
+router
+  .route("/reject/:id")
+  .patch(
+    authController.protect,
+    authController.restrictTo(
+      "Chief Executive Officer",
+      "Chief Operating Officer",
+      "Human Resources/Administrative"
+    ),
+    leaveController.rejectLeaveNew
   );
 
 // @route GET api/leaves/eligibleList

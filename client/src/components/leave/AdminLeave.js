@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../../api/axios";
 import LeavePendingRequest from "./LeavePendingRequest";
 import "./leave.css";
+import { toast } from "react-toastify";
 
 const AdminLeave = () => {
   const [pendingRequests, setPendingRequests] = useState([]);
@@ -19,31 +20,73 @@ const AdminLeave = () => {
   const handleApprove = async (id) => {
     const url = `/api/leaves/approve/${id}`;
 
-    axios
-      .patch(url, {})
-      .then((res) => {
-        if (res.status === 200) {
-          getPendingRequests();
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
+    try {
+      const res = await axios.patch(url, {});
+
+      if (res.status === 200) {
+        toast.success("Leave Approved", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        getPendingRequests();
+      }
+    } catch (error) {
+      // if (error.response?.status === 404) {
+      //   console.log("Leave not found");
+      // } else {
+      //   console.log(error.message);
+      // }
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+    }
   };
 
-  const handleReject = (id) => {
+  const handleReject = async (id) => {
     const url = `/api/leaves/reject/${id}`;
+    try {
+      const res = await axios.patch(url, {});
 
-    axios
-      .patch(url, {})
-      .then((res) => {
-        if (res.status === 200) {
-          getPendingRequests();
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
+      if (res.status === 200) {
+        toast.success("Leave Rejected", {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+
+        getPendingRequests();
+      }
+    } catch (error) {
+      toast.error(error.response.data.message, {
+        position: "top-center",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
       });
+    }
   };
 
   return (

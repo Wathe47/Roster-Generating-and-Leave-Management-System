@@ -24,6 +24,9 @@ const LeaveSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    feedback: {
+      type: String,
+    },
   },
   {
     timestamps: true,
@@ -32,11 +35,15 @@ const LeaveSchema = new mongoose.Schema(
 
 LeaveSchema.methods.approveLeave = function (
   status,
-  reason,
+  feedback,
   approved_rejectedBy
 ) {
   this.status = status;
-  this.reason = reason;
+
+  if (feedback) {
+    this.feedback = feedback;
+  }
+
   this.approved_rejectedBy = approved_rejectedBy;
   this.save();
 };
