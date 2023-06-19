@@ -28,38 +28,34 @@ const MonthlyReport = () => {
           <p className="month-value">{report.month}</p>
         </div>
       </div>
-      <div className="details-box">
-        <div className="info-box">
-          <h3 className="info-label">Employee</h3>
-          <p className="info-value">{report.employeeName}</p>
+      <div className="profile-section">
+        <div className="profile-details">
+          <h3 className="profile-label">Employee</h3>
+          <p className="profile-info">{report.employeeName}</p>
+          <h3 className="profile-label">Email</h3>
+          <p className="profile-info">{report.employeeEmail}</p>
+          <h3 className="profile-label">Phone No</h3>
+          <p className="profile-info">{report.employeePhone}</p>
+          <h3 className="profile-label">Job Role</h3>
+          <p className="profile-info">{report.jobRole}</p>
         </div>
-        <div className="info-box">
-          <h3 className="info-label">Email</h3>
-          <p className="info-value">{report.employeeEmail}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">Phone No</h3>
-          <p className="info-value">{report.employeePhone}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">Job Role</h3>
-          <p className="info-value">{report.jobRole}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">Working Hours</h3>
-          <p className="info-value">{report.workingHours}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">OT Hours</h3>
-          <p className="info-value">{report.overtimeHours}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">Leave Count</h3>
-          <p className="info-value">{report.leaveCount}</p>
-        </div>
-        <div className="info-box">
-          <h3 className="info-label">Overall Effectiveness</h3>
-          <p className="info-value">{report.overallEffectiveness}</p>
+        <div className="other-details">
+          <div className="info-box">
+            <h3 className="info-label">Working Hours</h3>
+            <p className="info-value">{report.workingHours}</p>
+          </div>
+          <div className="info-box">
+            <h3 className="info-label">OT Hours</h3>
+            <p className="info-value">{report.overtimeHours}</p>
+          </div>
+          <div className="info-box">
+            <h3 className="info-label">Leave Count</h3>
+            <p className="info-value">{report.leaveCount}</p>
+          </div>
+          <div className="info-box">
+            <h3 className="info-label">Overall Effectiveness</h3>
+            <p className="info-value">{report.overallEffectiveness}</p>
+          </div>
         </div>
       </div>
     </div>
