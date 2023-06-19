@@ -23,6 +23,19 @@ export const loginUser = (userData) => (dispatch) => {
     .then((res) => {
       // Save to localStorage
       const { token } = res.data;
+
+      // CHECK WHETHER OLD TOKEN IS PRESENT OR NOT
+      const oldToken = localStorage.getItem("jwtToken");
+
+      if (oldToken) {
+        // REMOVE OLD TOKEN FROM LOCAL STORAGE
+        localStorage.removeItem("jwtToken");
+        setAuthToken(false);
+        setCurrentUser({});
+      }
+
+      // SET NEW TOKEN TO LOCAL STORAGE
+
       localStorage.setItem("jwtToken", token);
       // Set token to Auth header
       setAuthToken(token);
@@ -78,4 +91,25 @@ export const checkToken = () => (dispatch) => {
     // Set current user to {} which will also set isAuthenticated to false
     dispatch(setCurrentUser({}));
   }
+};
+
+// ADMIN USER CHECK
+export const isAdmin = () => {
+  //GET TOKEN FROM LOCAL STORAGE
+  const token = localStorage.getItem("jwtToken");
+  let isAdmin = false;
+
+  if (token) {
+    const { jobTitle } = jwt_decode(token);
+    console.log("Job title:", jobTitle);
+
+    if (
+      jobTitle === "Chief Executive Officer" ||
+      jobTitle === "Chief Operating Officer"
+    ) {
+      isAdmin = true;
+    }
+  }
+
+  return isAdmin;
 };
