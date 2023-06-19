@@ -8,6 +8,8 @@ import { connect } from "react-redux";
 import { registerUser } from "../../actions/authActions";
 import { motion } from "framer-motion";
 import validateRegistrationInput from "../../validation/register";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class Registration extends Component {
   constructor() {
@@ -48,7 +50,9 @@ class Registration extends Component {
     if (isValid) {
       this.props.registerUser(newUser, this.props.history);
     } else {
-      this.setState({ errors });
+      Object.values(errors).forEach((error) => {
+        toast.error(error);
+      });
     }
   };
 
@@ -150,6 +154,7 @@ class Registration extends Component {
             </div>
           </form>
         </div>
+        <ToastContainer />
       </motion.div>
     );
   }

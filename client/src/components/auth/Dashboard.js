@@ -116,46 +116,20 @@ class Dashboard extends Component {
               </motion.p>
             </div>
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="dashboard__actionSection"
-          >
-            <Link to="/rosterCheckin" style={{ textDecoration: "none" }}>
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="checkin.jpeg"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h7" component="div">
-                        CHECKIN
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Let's do some good work!
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </motion.div>
-            </Link>
-            <Link to="/monthlyreport" style={{ textDecoration: "none" }}>
-              <div className="card--divider">
+          <div className="cards">
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="dashboard__actionSection"
+            >
+              <Link to="/rosterCheckin" style={{ textDecoration: "none" }}>
                 <motion.div
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <Card sx={{ maxWidth: 345 }}>
+                  <Card className="card-object" sx={{ maxWidth: 345 }}>
                     <CardActionArea>
                       <CardMedia
                         component="img"
@@ -165,70 +139,99 @@ class Dashboard extends Component {
                       />
                       <CardContent>
                         <Typography gutterBottom variant="h7" component="div">
-                          MONTHLY REPORT
+                          CHECKIN
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Check Your Progress!
+                          Let's do some good work!
                         </Typography>
                       </CardContent>
                     </CardActionArea>
                   </Card>
                 </motion.div>
-              </div>
-            </Link>
-            <Link to="/leave" style={{ textDecoration: "none" }}>
+              </Link>
+
+              <Link to="/leave" style={{ textDecoration: "none" }}>
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="card-object" sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image="leave.png"
+                        alt="green iguana"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h7" component="div">
+                          LEAVE
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Request Leave.
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </motion.div>
+              </Link>
+              <Link to="/empRoster" style={{ textDecoration: "none" }}>
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card className="card-object" sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image="roster.png"
+                        alt="green iguana"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h7" component="div">
+                          ROSTER
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Your Job Roster.
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </motion.div>
+              </Link>
+            </motion.div>
+          </div>
+          <div className="card--divider">
+            <Link to="/monthlyreport" style={{ textDecoration: "none" }}>
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <Card sx={{ maxWidth: 345 }}>
+                <Card className="card-object" sx={{ maxWidth: 345 }}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
                       height="140"
-                      image="leave.png"
+                      image="monthly-report.jpg"
                       alt="green iguana"
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h7" component="div">
-                        LEAVE
+                        MONTHLY REPORT
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        Request Leave.
+                        Check Your Progress!
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                 </Card>
               </motion.div>
             </Link>
-            <Link to="/empRoster" style={{ textDecoration: "none" }}>
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
-                <Card sx={{ maxWidth: 345 }}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      height="140"
-                      image="roster.png"
-                      alt="green iguana"
-                    />
-                    <CardContent>
-                      <Typography gutterBottom variant="h7" component="div">
-                        ROSTER
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        Your Job Roster.
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </motion.div>
-            </Link>
-          </motion.div>
+          </div>
         </div>
       </motion.div>
     );

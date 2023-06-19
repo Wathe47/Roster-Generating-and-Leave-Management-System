@@ -118,6 +118,6 @@ Card {
   top: 300px;
 }
 
-.card--divider {
-  margin-top: 40px;
+.card-object {
+  margin: 20px;
 }

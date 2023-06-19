@@ -1,7 +1,7 @@
-// Roster.js
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { ToastContainer, toast } from "react-toastify"; // Import toast notifications
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
 import {
   fetchRoster,
   addRosterItem,
@@ -9,7 +9,7 @@ import {
   deleteRosterItem,
 } from "../../actions/rosterActions";
 import "./RosterCheckin.css";
-import validateCheckIn from "../../validation/checkIn";
+import validateCheckIn from "../../validation/checkIn"; // Import form validation logic
 
 class Roster extends Component {
   state = {
@@ -19,25 +19,26 @@ class Roster extends Component {
   };
 
   componentDidMount() {
-    this.props.fetchRoster();
+    this.props.fetchRoster(); // Fetch roster data when the component mounts
   }
 
   handleAddRosterItem = (e) => {
     e.preventDefault();
     const { name, email } = this.props.auth.user; // Get the logged-in user's name and email
 
-    // Validate the check-in input
-    const { errors, isValid } = validateCheckIn(this.state);
+    const { errors, isValid } = validateCheckIn(this.state); // Validate the check-in input
 
     if (isValid) {
+      // If input is valid, add a roster item
       this.props.addRosterItem(name, email, this.state.checkedIn);
       this.setState({
         checkedIn: true,
         errors: {},
       });
     } else {
-      // If the form input is invalid, set the errors state
+      // If the form input is invalid, set the errors state and show a toast error message
       this.setState({ errors });
+      toast.error("Invalid input. Please check the form.");
     }
   };
 
@@ -48,7 +49,7 @@ class Roster extends Component {
       this.state.name,
       this.state.email,
       this.state.checkedIn
-    );
+    ); // Update a roster item
     this.setState({
       name: "",
       email: "",
@@ -58,7 +59,7 @@ class Roster extends Component {
   };
 
   handleDeleteRosterItem = (id) => {
-    this.props.deleteRosterItem(id);
+    this.props.deleteRosterItem(id); // Delete a roster item
   };
 
   handleCheckInOut = (
@@ -79,7 +80,7 @@ class Roster extends Component {
       checkedIn,
       checkInTime,
       thisCheckOutTime
-    );
+    ); // Update the check-in/out status and times of a roster item
   };
 
   handleEditRosterItem = (item) => {
@@ -88,7 +89,7 @@ class Roster extends Component {
       name: item.name,
       email: item.email,
       checkedIn: item.checkedIn,
-    });
+    }); // Set the state to edit a roster item
   };
 
   render() {
@@ -97,17 +98,12 @@ class Roster extends Component {
 
     return (
       <div className="checkin">
+        <ToastContainer /> {/* Container for toast notifications */}
         <br />
         <br />
         <h1>Roster</h1>
         <br />
-        <form
-          onSubmit={
-            this.state.editingId
-              ? this.handleUpdateRosterItem
-              : this.handleAddRosterItem
-          }
-        >
+        <form onSubmit={this.handleAddRosterItem}>
           <label>
             Checked In:
             <input
@@ -125,7 +121,6 @@ class Roster extends Component {
             {this.state.editingId ? "Update" : "CHECK IN"}
           </button>
         </form>
-
         <table className="roster-table">
           <thead>
             <tr>
@@ -169,12 +164,12 @@ class Roster extends Component {
                       >
                         Check Out
                       </button>
-                      <button
+                      {/* <button
                         className="delete"
                         onClick={() => this.handleDeleteRosterItem(item._id)}
                       >
                         Delete
-                      </button>
+                      </button> */}
                     </>
                   ) : (
                     <span>Checked Out</span>
@@ -184,7 +179,6 @@ class Roster extends Component {
             ))}
           </tbody>
         </table>
-
         <div className="checkin--devider"></div>
         {this.props.loading && <div>Loading...</div>}
         {this.props.error && <div>Error: {this.props.error}</div>}
