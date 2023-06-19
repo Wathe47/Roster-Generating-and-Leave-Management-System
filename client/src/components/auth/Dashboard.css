@@ -117,3 +117,7 @@ Card {
   z-index: -10;
   top: 300px;
 }
+
+.card--divider {
+  margin-top: 40px;
+}

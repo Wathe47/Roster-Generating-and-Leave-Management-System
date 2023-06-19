@@ -15,7 +15,7 @@ import About from "./components/auth/About";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import Dashboard from "./components/auth/Dashboard";
 import Leave from "./components/auth/Leave";
-import NavbarDashboard from "./components/layout/AdminNavbarDashboard";
+import NavbarDashboard from "./components/layout/NavbarDashboard";
 import Roster from "./components/auth/Roster";
 import Rostercheckin from "./components/auth/Rostercheckin";
 

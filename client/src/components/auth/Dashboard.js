@@ -148,6 +148,34 @@ class Dashboard extends Component {
                 </Card>
               </motion.div>
             </Link>
+            <Link to="/monthlyreport" style={{ textDecoration: "none" }}>
+              <div className="card--divider">
+                <motion.div
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        height="140"
+                        image="checkin.jpeg"
+                        alt="green iguana"
+                      />
+                      <CardContent>
+                        <Typography gutterBottom variant="h7" component="div">
+                          MONTHLY REPORT
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Check Your Progress!
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </motion.div>
+              </div>
+            </Link>
             <Link to="/leave" style={{ textDecoration: "none" }}>
               <motion.div
                 initial={{ opacity: 0, y: -20 }}
