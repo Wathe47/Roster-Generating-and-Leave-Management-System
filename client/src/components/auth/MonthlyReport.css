@@ -1,86 +1,77 @@
-.monthly-report-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin: 20px;
-  }
-  
-  .report-heading {
-    font-size: 24px;
-    margin-bottom: 20px;
-    align-self: flex-start;
-  }
-
-  .profile-section {
-    display: flex;
-    align-items: flex-start;
-    margin-bottom: 20px;
-  }
-  
-  .profile-details {
-    border: 1px solid #ccc;
-    padding: 10px;
-    width: 300px;
-  }
-  
-  .profile-label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .profile-info {
-    font-size: 14px;
-  }
-  
-  
-  .year-month-container {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 20px;
-    position: absolute;
-    left: 1496px;  
+.back {
+  background-image: linear-gradient(-45deg, #ffffff, #faf4ff, #f3f6ff, #effdde);
+  background-size: 400% 400%;
+  width: 100%;
+  height: 1000px;
+  margin-top: -95px;
+  animation: gradientAnimation 15s ease infinite;
 }
-  
-  .year-box,
-  .month-box {
-    flex-basis: 10%;
-    border: 11px solid #ccc;
-    padding: 10px;
-    margin-left: 10px;
-  }
-  
-  .year-label,
-  .month-label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .year-value,
-  .month-value {
-    font-size: 14px;
-  }
-  
-  .details-box {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 20px;
-    width: 100%;
-  }
-  
-  .info-box {
-    border: 1px solid #ccc;
-    padding: 10px;
-  }
-  
-  .info-label {
-    font-size: 16px;
-    margin-bottom: 5px;
-  }
-  
-  .info-value {
-    font-size: 14px;
-  }
 
-  
-  
+.monthly-report-container {
+  max-width: 800px;
+  margin: 100px auto 0;
+  padding: 20px;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.report-heading {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.card-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-heading {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-content {
+  margin-top: 5px;
+}
+
+.card-content-bold {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+/* Add cool animated background */
+.monthly-report-container::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  z-index: -1;
+  background-image: linear-gradient(45deg, #f64f59, #c471ed, #12c2e9, #f64f59);
+  background-size: 400% 400%;
+  animation: gradientAnimation 10s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

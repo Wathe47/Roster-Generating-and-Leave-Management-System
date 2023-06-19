@@ -1,60 +1,89 @@
-import React from 'react';
-import './MonthlyReport.css';
+import React from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import "./MonthlyReport.css";
 
 const MonthlyReport = () => {
   const report = {
-    month: 'June',
+    month: "June",
     year: 2023,
-    employeeName: 'John Doe',
-    employeeEmail: 'johndoe@example.com',
-    employeePhone: '123-456-7890',
-    jobRole: 'Software Developer',
+    employeeName: "John Doe",
+    employeeEmail: "johndoe@example.com",
+    employeePhone: "123-456-7890",
+    jobRole: "Software Developer",
     workingHours: 160,
     overtimeHours: 10,
     leaveCount: 2,
-    overallEffectiveness: 'Excellent',
+    overallEffectiveness: "Excellent",
   };
 
+  const data = [
+    { name: "Working Hours", value: report.workingHours },
+    { name: "Overtime Hours", value: report.overtimeHours },
+    { name: "Leave Count", value: report.leaveCount },
+  ];
+
   return (
-    <div className="monthly-report-container">
-      <h1 className="report-heading">Monthly Report</h1>
-      <div className="year-month-container">
-        <div className="year-box">
-          <h3 className="year-label">Year</h3>
-          <p className="year-value">{report.year}</p>
-        </div>
-        <div className="month-box">
-          <h3 className="month-label">Month</h3>
-          <p className="month-value">{report.month}</p>
-        </div>
-      </div>
-      <div className="profile-section">
-        <div className="profile-details">
-          <h3 className="profile-label">Employee</h3>
-          <p className="profile-info">{report.employeeName}</p>
-          <h3 className="profile-label">Email</h3>
-          <p className="profile-info">{report.employeeEmail}</p>
-          <h3 className="profile-label">Phone No</h3>
-          <p className="profile-info">{report.employeePhone}</p>
-          <h3 className="profile-label">Job Role</h3>
-          <p className="profile-info">{report.jobRole}</p>
-        </div>
-        <div className="other-details">
-          <div className="info-box">
-            <h3 className="info-label">Working Hours</h3>
-            <p className="info-value">{report.workingHours}</p>
+    <div className="back">
+      <div className="monthly-report-container">
+        <h1 className="report-heading">Monthly Report</h1>
+
+        <div className="card-container">
+          <div className="card">
+            <h2 className="card-heading">Date</h2>
+            <p className="card-content-bold">
+              {report.month} {report.year}
+            </p>
           </div>
-          <div className="info-box">
-            <h3 className="info-label">OT Hours</h3>
-            <p className="info-value">{report.overtimeHours}</p>
+
+          <div className="card">
+            <h2 className="card-heading">Employee Information</h2>
+            <p className="card-content">
+              <strong>Name:</strong> {report.employeeName}
+            </p>
+            <p className="card-content">
+              <strong>Email:</strong> {report.employeeEmail}
+            </p>
+            <p className="card-content">
+              <strong>Phone No:</strong> {report.employeePhone}
+            </p>
+            <p className="card-content">
+              <strong>Job Role:</strong> {report.jobRole}
+            </p>
           </div>
-          <div className="info-box">
-            <h3 className="info-label">Leave Count</h3>
-            <p className="info-value">{report.leaveCount}</p>
+
+          <div className="card">
+            <h2 className="card-heading">Work Hours</h2>
+            <p className="card-content">
+              <strong>Working Hours:</strong> {report.workingHours}
+            </p>
+            <p className="card-content">
+              <strong>Overtime Hours:</strong> {report.overtimeHours}
+            </p>
+            <p className="card-content">
+              <strong>Leave Count:</strong> {report.leaveCount}
+            </p>
           </div>
-          <div className="info-box">
-            <h3 className="info-label">Overall Effectiveness</h3>
-            <p className="info-value">{report.overallEffectiveness}</p>
+        </div>
+
+        <div className="card chart-card">
+          <h2 className="card-heading">Work Distribution</h2>
+          <div className="chart-container">
+            <BarChart width={600} height={200} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="value" name="Hours" fill="#8884d8" />
+            </BarChart>
           </div>
         </div>
       </div>
