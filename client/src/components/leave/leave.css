@@ -1,0 +1,73 @@
+.leave {
+  margin-bottom: 1rem;
+}
+
+.leave form {
+  display: flex;
+  flex-direction: column;
+}
+
+.leave form .MuiFormControl-root {
+  margin-bottom: 1rem;
+}
+
+.leave-close-button {
+  text-decoration: none;
+}
+
+.leave-requests button {
+  color: rgb(255, 255, 255);
+  width: 100%;
+  background-color: rgb(38, 38, 38);
+}
+
+.leave-requests {
+  margin-left: 20%;
+  text-align: left;
+  border-radius: 5px;
+  width: 60%;
+  margin-top: 2rem;
+  background-color: #545454;
+  color: rgb(230, 230, 230);
+}
+
+.leave-requests-table {
+  display: flex;
+  justify-content: left;
+  align-items: left;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin: 10px;
+}
+
+.leave-request {
+  border: 2px solid #727272;
+  border-radius: 5px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.divider {
+  width: 100%;
+  height: 1000px;
+  background: linear-gradient(0deg, #a1a1a1, #efefef);
+  position: fixed;
+  z-index: -10;
+  top: 300px;
+}
+
+.leave-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.leave-request-button {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 2rem;
+}
