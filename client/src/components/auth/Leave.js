@@ -10,7 +10,6 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { checkToken } from "../../actions/authActions";
 import "./leave.css";
 
 // Component for rendering individual leave requests
@@ -47,6 +46,22 @@ class Leave extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     console.log("Form submitted:", this.state);
+
+    const data = {
+      date: this.state.date,
+      type: this.state.type,
+      reason: this.state.reason,
+    };
+
+    axios
+      .post("/api/leaves", data)
+      .then((res) => {
+        console.log(res);
+        this.getLeaveData();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   handleInputChange = (event) => {
@@ -73,33 +88,38 @@ class Leave extends React.Component {
 
   async getLeaveData() {
     try {
-      // Dummy data for pending requests
-      const pendingRequestsData = [
-        {
-          date: "2023-06-01",
-          type: "vacation",
-          reason: "Family vacation",
-        },
-        {
-          date: "2023-06-05",
-          type: "sick",
-          reason: "Fever",
-        },
-      ];
+      const response = await axios.get("/api/leaves/mine").catch((err) => {
+        console.log(err);
+      });
+      console.log(response.data.data.approvedLeaves);
 
-      // Dummy data for approved requests
-      const approvedRequestsData = [
-        {
-          date: "2023-06-10",
-          type: "vacation",
-          reason: "Holiday trip",
-        },
-      ];
+      // Dummy data for pending requests
+      // const pendingRequestsData = [
+      //   {
+      //     date: "2023-06-01",
+      //     type: "vacation",
+      //     reason: "Family vacation",
+      //   },
+      //   {
+      //     date: "2023-06-05",
+      //     type: "sick",
+      //     reason: "Fever",
+      //   },
+      // ];
+
+      // // Dummy data for approved requests
+      // const approvedRequestsData = [
+      //   {
+      //     date: "2023-06-10",
+      //     type: "vacation",
+      //     reason: "Holiday trip",
+      //   },
+      // ];
 
       // Assuming the API response contains separate arrays for pending and approved requests
       this.setState({
-        pendingRequests: pendingRequestsData,
-        approvedRequests: approvedRequestsData,
+        pendingRequests: response.data.data.pendingLeaves,
+        approvedRequests: response.data.data.approvedLeaves,
       });
     } catch (error) {
       console.error(error);
@@ -107,8 +127,6 @@ class Leave extends React.Component {
   }
 
   async componentDidMount() {
-    console.log(axios.defaults.headers.common["Authorization"]);
-    checkToken();
     await this.getLeaveData();
   }
 

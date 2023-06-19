@@ -17,8 +17,7 @@ import Dashboard from "./components/auth/Dashboard";
 import Leave from "./components/auth/Leave";
 import NavbarDashboard from "./components/layout/NavbarDashboard";
 import Roster from "./components/auth/Roster";
-import Rostercheckin from "./components/auth/Rostercheckin"
-
+import Rostercheckin from "./components/auth/Rostercheckin";
 
 import setAuthToken from "./utils/setAuthToken";
 import jwt_decode from "jwt-decode";
@@ -26,6 +25,10 @@ import { setCurrentUser } from "./actions/authActions";
 import RosterCreate from "./components/auth/RosterCreate";
 import Emproster from "./components/auth/EMP_Roster";
 import MonthlyReport from "./components/auth/MonthlyReport";
+import AdminLogin from "./components/auth/LoginAdmin";
+import AdminDashboard from "./components/auth/DashboardAdmin";
+import AdminNavbarDashboard from "./components/layout/AdminNavbarDashboard";
+import AdminLeave from "./components/auth/AdminLeave";
 
 if (localStorage.jwtToken) {
   const token = localStorage.jwtToken;
@@ -120,6 +123,7 @@ class App extends Component {
                     path="/dashboard"
                     render={(props) => <Dashboard mode={mode} {...props} />}
                   ></Route>
+
                   <Route
                     exact
                     path="/leave"
@@ -186,7 +190,7 @@ class App extends Component {
                     render={(props) => <Rostercheckin mode={mode} {...props} />}
                   ></Route>
 
-<Route
+                  <Route
                     exact
                     path="/monthlyreport"
                     render={(props) => (
@@ -197,6 +201,47 @@ class App extends Component {
                     exact
                     path="/monthlyreport"
                     render={(props) => <MonthlyReport mode={mode} {...props} />}
+                  ></Route>
+
+                  <Route
+                    exact
+                    path="/adminLogin"
+                    render={(props) => (
+                      <AdminNavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/adminLogin"
+                    render={(props) => <AdminLogin mode={mode} {...props} />}
+                  ></Route>
+
+                  <Route
+                    exact
+                    path="/adminDashboard"
+                    render={(props) => (
+                      <AdminNavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/adminDashboard"
+                    render={(props) => (
+                      <AdminDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+
+                  <Route
+                    exact
+                    path="/adminLeave"
+                    render={(props) => (
+                      <AdminNavbarDashboard mode={mode} {...props} />
+                    )}
+                  ></Route>
+                  <Route
+                    exact
+                    path="/adminLeave"
+                    render={(props) => <AdminLeave mode={mode} {...props} />}
                   ></Route>
                 </React.Fragment>
               </Switch>

@@ -13,7 +13,7 @@ class NavbarDashboard extends Component {
   }
 
   render() {
-    const { isAuthenticated, user } = this.props.auth;
+    const { isAuthenticated } = this.props.auth; //user
 
     const authLinks = (
       <>
@@ -32,9 +32,9 @@ class NavbarDashboard extends Component {
             LEAVE
           </Link>
         </li>
-        <li onClick={this.handleLogout} className="nav-link">
+        {/* <li onClick={this.handleLogout} className="nav-link">
           LOGOUT
-        </li>
+        </li> */}
       </>
     );
 
@@ -65,7 +65,7 @@ class NavbarDashboard extends Component {
           </Link>
           <ul className="nav--list">
             {isAuthenticated ? authLinks : guestLinks}
-            {isAuthenticated && (
+            {/* {isAuthenticated && (
               <li>
                 <img
                   src={user.avatar}
@@ -73,7 +73,7 @@ class NavbarDashboard extends Component {
                   className="nav--profilePhoto"
                 />
               </li>
-            )}
+            )} */}
           </ul>
         </nav>
       </div>

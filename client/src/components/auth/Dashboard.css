@@ -109,4 +109,15 @@ Card {
   text-decoration: none;
 }
 
+.dash--divider {
+  width: 100%;
+  height: 700px;
+  background: linear-gradient(0deg, #d5d5d5, #ffffff);
+  position: absolute;
+  z-index: -10;
+  top: 300px;
+}
 
+.card-object {
+  margin: 20px;
+}

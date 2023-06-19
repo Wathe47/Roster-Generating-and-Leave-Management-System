@@ -78,17 +78,18 @@ exports.login = catchAsync(async (req, res, next) => {
 
 //?Implementing Protected Routes
 exports.protect = catchAsync(async (req, res, next) => {
-  console.log(req);
-
   // 1) Getting token and Check it is available
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
-  ) {
-    token = req.headers.authorization.split(" ")[1];
-    //Splitting header into two parts and taking second part which is token. It is an Array
+  if (req.headers.authorization) {
+    token = req.headers.authorization;
   }
+
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith("Bearer")
+  // ) {
+  //   token = req.headers.authorization.split(" ")[1];
+  // }
 
   // Check Whether User is login or Not
   if (!token) {

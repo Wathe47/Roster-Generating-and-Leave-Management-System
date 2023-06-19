@@ -5,9 +5,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import classNames from "classnames";
 import { loginUser } from "../../actions/authActions";
-
-
 import { motion } from "framer-motion";
+
+// Import the login validation function
+import validateLoginInput from "../../validation/login";
 
 class Login extends Component {
   constructor() {
@@ -30,26 +31,31 @@ class Login extends Component {
       this.setState({ errors: nextProps.errors });
     }
 
-    // Check if authentication failed due to invalid credentials
-    if (nextProps.errors && nextProps.errors.invalidCredentials) {
-      // Set authentication to false
-      this.props.logoutUser();
-    }
+    // ...
   }
 
   onSubmit(e) {
     e.preventDefault();
-    const userData = {
-      email: this.state.email,
-      password: this.state.password,
-    };
 
-    this.props.loginUser(userData);
+    // Validate the login input
+    const { errors, isValid } = validateLoginInput(this.state);
+
+    if (isValid) {
+      const userData = {
+        email: this.state.email,
+        password: this.state.password,
+      };
+
+      this.props.loginUser(userData);
+    } else {
+      // If the form input is invalid, set the errors state
+      this.setState({ errors });
+    }
   }
 
-  onChange = (e) => {
+  onChange(e) {
     this.setState({ [e.target.name]: e.target.value });
-  };
+  }
 
   render() {
     const { errors } = this.state;
@@ -117,7 +123,7 @@ class Login extends Component {
                         label="UserName"
                         variant="outlined"
                         className={classNames("login--email-input", {
-                          "is-invalid": errors.name,
+                          "is-invalid": errors.email,
                         })}
                         size="small"
                         value={this.state.email}
@@ -125,8 +131,8 @@ class Login extends Component {
                         color="primary"
                         name="email"
                       />
-                      {errors.name && (
-                        <div className="invalid-feedback">{errors.name}</div>
+                      {errors.email && (
+                        <div className="invalid-feedback">{errors.email}</div>
                       )}
                     </div>
 
@@ -167,7 +173,7 @@ class Login extends Component {
                     <Link className="nav-link" to="/forgotpassword">
                       <button className="button--fogotpass">
                         {" "}
-                        Fogot Password?
+                        Forgot Password?
                       </button>
                     </Link>
                   </div>

@@ -38,7 +38,7 @@ class Roster extends Component {
     } else {
       // If the form input is invalid, set the errors state and show a toast error message
       this.setState({ errors });
-      toast.error("Please check the 'Checked In' checkbox.");
+      toast.error("Invalid input. Please check the form.");
     }
   };
 
