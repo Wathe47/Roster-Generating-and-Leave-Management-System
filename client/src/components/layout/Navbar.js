@@ -31,7 +31,7 @@ class Navbar extends Component {
 
             <li>
               <Link className="nav-link" to="/about">
-              ABOUT
+                ABOUT
               </Link>
             </li>
           </ul>

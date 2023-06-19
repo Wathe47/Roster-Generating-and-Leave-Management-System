@@ -26,6 +26,7 @@ class Dashboard extends Component {
       this.setState({ time: new Date().toLocaleTimeString() });
     }, 1000);
   }
+
   handleProfilePictureChange = (e) => {
     const file = e.target.files[0];
     const filePreview = URL.createObjectURL(file);
@@ -47,7 +48,7 @@ class Dashboard extends Component {
 
   render() {
     const { auth } = this.props;
-    const { filePreview, redirect } = this.state;
+    const { redirect } = this.state;
 
     if (redirect) {
       return <Redirect to="/login" />;
@@ -60,109 +61,146 @@ class Dashboard extends Component {
         transition={{ duration: 0.75, ease: "easeOut" }}
         className={this.props.mode}
       >
+        <div className="dash--divider"></div>
+
         <div className="dashboard__header">
-          <h1 className="dashboard__title">Dashboard</h1>
-          <button
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="dashboard__title"
+          >
+            Dashboard
+          </motion.h1>
+          <motion.button
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
             className="dashboard__logoutButton"
             onClick={this.handleLogout}
           >
             Logout
-          </button>
+          </motion.button>
         </div>
         <div className="dashboard__content">
-          <div className="dashboard__profileSection">
-            <img
-              src={filePreview || auth.user.avatar}
-              alt="Profile"
-              className="dashboard__profilePhoto"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={this.handleProfilePictureChange}
-            />
-            <button onClick={this.handleProfilePictureSubmit}>Update</button>
-
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="dashboard__profileSection"
+          >
             <div className="dashboard__profileInfo">
-              <h2 className="dashboard__greeting">
+              <motion.h2
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="dashboard__greeting"
+              >
                 Hi, {auth.user.name.split(" ")[0]}!
-              </h2>
-              <p className="dashboard__jobTitle">
-                <b>Job Title:</b> {auth.user.jobTitle}
-              </p>
-              <p className="dashboard__currentTime">{this.state.time}</p>
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="dashboard__jobTitle"
+              >
+                {/* <b>Job Title:</b> */} {auth.user.jobTitle}
+              </motion.p>
+              <motion.p
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="dashboard__currentTime"
+              >
+                {this.state.time}
+              </motion.p>
             </div>
-          </div>
-          <div className="dashboard__actionSection">
-            {/* <button className="dashboard__actionButton">Check In</button> */}
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            className="dashboard__actionSection"
+          >
             <Link to="/rosterCheckin" style={{ textDecoration: "none" }}>
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="checkin.jpeg"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h7" component="div">
-                      CHECKIN
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Let's do some good work!
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="checkin.jpeg"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h7" component="div">
+                        CHECKIN
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Let's do some good work!
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </motion.div>
             </Link>
-
-            {/* <Link to="/leave">
-              <button className="dashboard__actionButton">Request Leave</button>
-            </Link>
-            <Link to="/roster">
-              <button className="dashboard__actionButton">View Roster</button>
-            </Link> */}
             <Link to="/leave" style={{ textDecoration: "none" }}>
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="leave.png"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h7" component="div">
-                      LEAVE
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Request Leave.
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="leave.png"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h7" component="div">
+                        LEAVE
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Request Leave.
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </motion.div>
             </Link>
             <Link to="/empRoster" style={{ textDecoration: "none" }}>
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    component="img"
-                    height="140"
-                    image="roster.png"
-                    alt="green iguana"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h7" component="div">
-                      ROSTER
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      Your Job Roster.
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      height="140"
+                      image="roster.png"
+                      alt="green iguana"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h7" component="div">
+                        ROSTER
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Your Job Roster.
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </motion.div>
             </Link>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     );
