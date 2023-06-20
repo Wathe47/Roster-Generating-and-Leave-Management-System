@@ -38,11 +38,6 @@ const AdminLeave = () => {
         getPendingRequests();
       }
     } catch (error) {
-      // if (error.response?.status === 404) {
-      //   console.log("Leave not found");
-      // } else {
-      //   console.log(error.message);
-      // }
       toast.error(error.response.data.message, {
         position: "top-center",
         autoClose: 5000,
@@ -62,6 +57,8 @@ const AdminLeave = () => {
       const res = await axios.patch(url, {});
 
       if (res.status === 200) {
+        console.log("Leave Rejected");
+
         toast.success("Leave Rejected", {
           position: "top-center",
           autoClose: 5000,
@@ -76,6 +73,7 @@ const AdminLeave = () => {
         getPendingRequests();
       }
     } catch (error) {
+      console.log(error);
       toast.error(error.response.data.message, {
         position: "top-center",
         autoClose: 5000,

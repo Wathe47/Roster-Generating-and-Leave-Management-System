@@ -84,17 +84,17 @@ exports.createLeave = catchAsync(async (req, res, next) => {
   });
 
   //SEND THE NOTIFICATION EMAIL
-  const jobTitles = [
-    "Chief Executive Officer",
-    "Chief Operating Officer",
-    "Human Resources/Administrative",
-  ];
-  const adminUsers = await User.find({ jobTitle: { $in: jobTitles } });
-  const url = "#";
+  // const jobTitles = [
+  //   "Chief Executive Officer",
+  //   "Chief Operating Officer",
+  //   "Human Resources/Administrative",
+  // ];
+  // const adminUsers = await User.find({ jobTitle: { $in: jobTitles } });
+  // const url = "#";
 
-  adminUsers.forEach(async (adminUser) => {
-    await new Email(adminUser, url, currentemp, newLeave).sendNotifyLeave();
-  });
+  // adminUsers.forEach(async (adminUser) => {
+  //   await new Email(adminUser, url, currentemp, newLeave).sendNotifyLeave();
+  // });
 
   res.status(201).json({
     status: "success",
