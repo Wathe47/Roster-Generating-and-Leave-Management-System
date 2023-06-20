@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema(
     jobTitle: {
       type: String,
       //required: [true, `Enter Employee's job title !!`],
-      default: "Junior Software Engineer",
+      default: "Software Developer",
     },
     leavesTaken: [
       {

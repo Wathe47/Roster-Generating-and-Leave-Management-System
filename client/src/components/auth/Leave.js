@@ -93,29 +93,6 @@ class Leave extends React.Component {
       });
       console.log(response.data.data.approvedLeaves);
 
-      // Dummy data for pending requests
-      // const pendingRequestsData = [
-      //   {
-      //     date: "2023-06-01",
-      //     type: "vacation",
-      //     reason: "Family vacation",
-      //   },
-      //   {
-      //     date: "2023-06-05",
-      //     type: "sick",
-      //     reason: "Fever",
-      //   },
-      // ];
-
-      // // Dummy data for approved requests
-      // const approvedRequestsData = [
-      //   {
-      //     date: "2023-06-10",
-      //     type: "vacation",
-      //     reason: "Holiday trip",
-      //   },
-      // ];
-
       // Assuming the API response contains separate arrays for pending and approved requests
       this.setState({
         pendingRequests: response.data.data.pendingLeaves,

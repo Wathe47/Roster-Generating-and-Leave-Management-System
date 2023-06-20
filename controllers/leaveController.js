@@ -16,7 +16,10 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
     .sort()
     .limitFields()
     .paginate();
-  const leaves = await features.query;
+  const leaves = await features.query.populate({
+    path: "employee",
+    select: "name jobTitle",
+  });
 
   // SEND RESPONSE
   res.status(200).json({
@@ -81,17 +84,17 @@ exports.createLeave = catchAsync(async (req, res, next) => {
   });
 
   //SEND THE NOTIFICATION EMAIL
-  const jobTitles = [
-    "Chief Executive Officer",
-    "Chief Operating Officer",
-    "Human Resources/Administrative",
-  ];
-  const adminUsers = await User.find({ jobTitle: { $in: jobTitles } });
-  const url = "#";
+  // const jobTitles = [
+  //   "Chief Executive Officer",
+  //   "Chief Operating Officer",
+  //   "Human Resources/Administrative",
+  // ];
+  // const adminUsers = await User.find({ jobTitle: { $in: jobTitles } });
+  // const url = "#";
 
-  adminUsers.forEach(async (adminUser) => {
-    await new Email(adminUser, url, currentemp, newLeave).sendNotifyLeave();
-  });
+  // adminUsers.forEach(async (adminUser) => {
+  //   await new Email(adminUser, url, currentemp, newLeave).sendNotifyLeave();
+  // });
 
   res.status(201).json({
     status: "success",
@@ -207,5 +210,95 @@ exports.approveLeave = catchAsync(async (req, res, next) => {
     data: {
       leave,
     },
+  });
+});
+
+//NEW ROUTES APPPROVE LEAVE
+exports.approveLeaveNew = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const currentemp = req.user;
+  const approved_rejectedBy = currentemp._id.toString();
+
+  //CHECK WHETHER LEAVE IS EXISTS WITH THAT ID
+  const leave = await LeaveRequest.findById(id);
+  if (!leave) return next(new AppError("No leave found with that ID", 404));
+
+  //CHECK WHETHER LEAVE IS ALREADY APPROVED OR REJECTED
+
+  if (leave.status === "approved" || leave.status === "rejected") {
+    return next(
+      new AppError("Leave is already " + leave.status + " by admin", 404)
+    );
+  }
+
+  //CHECK WHETHER SAME USER IS APPROVING OR REJECTING THE LEAVE
+
+  if (leave.employee.toString() === approved_rejectedBy) {
+    return next(
+      new AppError("You can't approve or reject your own leave request", 404)
+    );
+  }
+
+  //IF ALL CHECKS ARE PASSED THEN APPROVE OR REJECT THE LEAVE
+  leave.approveLeave("approved", "", approved_rejectedBy);
+
+  //SEND THE NOTIFICATION EMAIL
+  const requestedleaveUser = await User.findById(leave.employee.toString());
+
+  await new Email(
+    requestedleaveUser,
+    "#",
+    currentemp,
+    leave
+  ).sendLeaveApproved();
+
+  res.status(200).json({
+    status: "success",
+  });
+});
+
+//NEW ROUTES REJECT LEAVE
+exports.rejectLeaveNew = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const currentemp = req.user;
+  const approved_rejectedBy = currentemp._id.toString();
+
+  //CHECK WHETHER LEAVE IS EXISTS WITH THAT ID
+  const leave = await LeaveRequest.findById(id);
+  if (!leave) return next(new AppError("No leave found with that ID", 404));
+
+  //CHECK WHETHER LEAVE IS ALREADY APPROVED OR REJECTED
+
+  if (leave.status === "approved" || leave.status === "rejected") {
+    return next(
+      new AppError("Leave is already " + leave.status + " by admin", 404)
+    );
+  }
+
+  //CHECK WHETHER SAME USER IS APPROVING OR REJECTING THE LEAVE
+
+  if (leave.employee.toString() === approved_rejectedBy) {
+    return next(
+      new AppError("You can't approve or reject your own leave request", 404)
+    );
+  }
+
+  //IF ALL CHECKS ARE PASSED THEN APPROVE OR REJECT THE LEAVE
+  leave.approveLeave("rejected", "", approved_rejectedBy);
+
+  //SEND THE NOTIFICATION EMAIL
+  const requestedleaveUser = await User.findById(leave.employee.toString());
+
+  await new Email(
+    requestedleaveUser,
+    "#",
+    currentemp,
+    leave
+  ).sendLeaveRejected();
+
+  res.status(200).json({
+    status: "success",
   });
 });
