@@ -6,9 +6,9 @@ const rosterSchema = new Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true },
-    checkInTime: { type: Date },
-    checkOutTime: { type: Date },
-    checkedIn: { type: Boolean, required: true },
+    checkInTime: { type: String },
+    checkOutTime: { type: String },
+    checkedIn: { type: Boolean, required: false },
   },
   {
     timestamps: true,

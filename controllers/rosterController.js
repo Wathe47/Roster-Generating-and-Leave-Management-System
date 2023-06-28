@@ -8,7 +8,6 @@ exports.getRoster = (req, res) => {
     .catch((err) => res.status(400).json("Error: " + err));
 };
 
-
 exports.getRosterById = (req, res) => {
   Roster.findById(req.params.id)
     .then((roster) => res.json(roster))
@@ -16,9 +15,10 @@ exports.getRosterById = (req, res) => {
 };
 
 exports.addRosterItem = (req, res) => {
-  const { name, email, checkedIn } = req.body;
-
+  const { id, name, email, checkedIn } = req.body;
+  checkedIn = true;
   const newRoster = new Roster({
+    id,
     name,
     email,
     checkedIn,
@@ -31,8 +31,8 @@ exports.addRosterItem = (req, res) => {
 };
 
 exports.updateRosterItem = (req, res) => {
-  const { id } = req.params;
-  const { checkedIn } = req.body;
+  const { id } = req.body;
+  const { checkedIn } = true;
   const currentTime = new Date().toISOString();
 
   Roster.findByIdAndUpdate(
@@ -46,7 +46,6 @@ exports.updateRosterItem = (req, res) => {
     .then(() => res.json("Roster item updated!"))
     .catch((err) => res.status(400).json("Error: " + err));
 };
-
 
 exports.deleteRosterItem = (req, res) => {
   Roster.findByIdAndDelete(req.params.id)

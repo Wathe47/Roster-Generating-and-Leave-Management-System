@@ -12,7 +12,7 @@ router.route("/").get(leaveController.getAllLeaves);
 // @route POST api/leaves
 // @desc Request Leaves
 // @access Private (Login Users)
-router.route("/").post(authController.protect, leaveController.createLeave);
+router.route("/").post(leaveController.createLeave);
 
 // @route GET api/leaves/mine
 //        - GET api/leaves/mine?status=approved
@@ -27,7 +27,6 @@ router.route("/mine").get(authController.protect, leaveController.getMyLeaves);
 router
   .route("/approve/:id")
   .patch(
-    authController.protect,
     authController.restrictTo(
       "Chief Executive Officer",
       "Chief Operating Officer",
@@ -42,7 +41,6 @@ router
 router
   .route("/reject/:id")
   .patch(
-    authController.protect,
     authController.restrictTo(
       "Chief Executive Officer",
       "Chief Operating Officer",

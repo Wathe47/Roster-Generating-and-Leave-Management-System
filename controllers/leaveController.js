@@ -32,9 +32,9 @@ exports.getAllLeaves = catchAsync(async (req, res, next) => {
 });
 
 exports.createLeave = catchAsync(async (req, res, next) => {
-  const { date, type, reason } = req.body;
-  const currentemp = req.user;
-  const employee = currentemp._id.toString();
+  const { id, date, type, reason } = req.body;
+  const employee = id;
+  // const employee = currentemp._id.toString();
 
   //FIRST CHECK EMPLOYEE IS EXISTS
   if (!employee) {
